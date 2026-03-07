@@ -1,0 +1,202 @@
+[
+  {
+    "key": "ACDM",
+    "name": "FyndAcademy"
+  },
+  {
+    "key": "ACM",
+    "name": "Access Management"
+  },
+  {
+    "key": "AF",
+    "name": "Affordplan"
+  },
+  {
+    "key": "AICC",
+    "name": "AI Catalog"
+  },
+  {
+    "key": "AJIO",
+    "name": "AJIO"
+  },
+  {
+    "key": "AMNT",
+    "name": "Amante"
+  },
+  {
+    "key": "AP",
+    "name": "AI Photoshoot Project Tracker"
+  },
+  {
+    "key": "APPR",
+    "name": "AI Photoshoot ML Roadmap"
+  },
+  {
+    "key": "ARCV",
+    "name": "Central Archived Backlog "
+  },
+  {
+    "key": "BB",
+    "name": "B2B Commerce"
+  },
+  {
+    "key": "BOLT",
+    "name": "Boltic"
+  },
+  {
+    "key": "CAA",
+    "name": "Central Automation & Analytics"
+  },
+  {
+    "key": "CAB",
+    "name": "JCP CAB"
+  },
+  {
+    "key": "CACL",
+    "name": "Catalog Cloud"
+  },
+  {
+    "key": "CAI",
+    "name": "Connect AI"
+  },
+  {
+    "key": "CASH",
+    "name": "Cashiness"
+  },
+  {
+    "key": "CBIT",
+    "name": "CoBoltic Implementation Tracker"
+  },
+  {
+    "key": "CCP",
+    "name": "Unified Customer Platform - Archived"
+  },
+  {
+    "key": "CGL",
+    "name": "Commerce Global"
+  },
+  {
+    "key": "CML",
+    "name": "Commerce ML"
+  },
+  {
+    "key": "COCT",
+    "name": "Commerce Control Tower"
+  },
+  {
+    "key": "COPN",
+    "name": "Fynd Coupons "
+  },
+  {
+    "key": "CORX",
+    "name": "Cortex"
+  },
+  {
+    "key": "CPLT",
+    "name": "Kaily AI"
+  },
+  {
+    "key": "CRM",
+    "name": "Change Request"
+  },
+  {
+    "key": "CXR",
+    "name": "GlamAR"
+  },
+  {
+    "key": "DCCP",
+    "name": "Devops Cloud Capacity Planning"
+  },
+  {
+    "key": "DOPS",
+    "name": "DevOps"
+  },
+  {
+    "key": "DOSH",
+    "name": "Potlee"
+  },
+  {
+    "key": "DSAI",
+    "name": "Design Studio & AI Photoshoot"
+  },
+  {
+    "key": "DSOP",
+    "name": "DevSecOps"
+  },
+  {
+    "key": "DT",
+    "name": "Design Team"
+  },
+  {
+    "key": "DX",
+    "name": "DX"
+  },
+  {
+    "key": "ENT",
+    "name": "Enterprise"
+  },
+  {
+    "key": "ERP",
+    "name": "ERP (Enterprise Resource Planning)"
+  },
+  {
+    "key": "FACL",
+    "name": "Fynd Advance Commerce Lab"
+  },
+  {
+    "key": "FCC",
+    "name": "Fynd Central Console"
+  },
+  {
+    "key": "FCES",
+    "name": "FC Engg Support"
+  },
+  {
+    "key": "FCP",
+    "name": "Fynd Create - Product"
+  },
+  {
+    "key": "FCPS",
+    "name": "Fynd Commerce Platform Support"
+  },
+  {
+    "key": "FDS",
+    "name": "Fynd Design System"
+  },
+  {
+    "key": "FE",
+    "name": "Fynd Engage"
+  },
+  {
+    "key": "FEA",
+    "name": "Fynd External Apps"
+  },
+  {
+    "key": "FEC",
+    "name": "Fynd Extensions Communication"
+  },
+  {
+    "key": "FEL",
+    "name": "Fynd Extensions Logistic"
+  },
+  {
+    "key": "FEP",
+    "name": "Fynd Extensions Payment"
+  },
+  {
+    "key": "FEPSD",
+    "name": "Fynd Extensions Product, Search & Discovery"
+  },
+  {
+    "key": "FESS",
+    "name": "FC Engineering Support System"
+  },
+  {
+    "key": "FEXP",
+    "name": "Fynd Express"
+  },
+  {
+    "key": "FINC",
+    "name": "Finance"
+  }
+]

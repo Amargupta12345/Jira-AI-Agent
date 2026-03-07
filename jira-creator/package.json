@@ -1,0 +1,10 @@
+{
+  "name": "jira-transition",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Headless browser JIRA transition tool for screens requiring attachments",
+  "dependencies": {
+    "marked": "^17.0.2",
+    "playwright": "1.58.2"
+  }
+}

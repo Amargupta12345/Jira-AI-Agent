@@ -1,0 +1,10 @@
+# V1 agent (legacy, contains credentials)
+v1-agent-legacy/
+
+# OS files
+.DS_Store
+
+# jira-creator secrets
+jira-creator/jira-config.json
+jira-creator/.auth-state.json
+jira-creator/node_modules/

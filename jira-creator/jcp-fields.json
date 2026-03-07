@@ -1,0 +1,218 @@
+{
+  "project": {
+    "key": "JCP",
+    "name": "Jio Commerce Platform : Core"
+  },
+  "requiredFields": {
+    "components": {
+      "fieldId": "components",
+      "name": "Components",
+      "values": [
+        { "id": "13226", "name": "Access" },
+        { "id": "12379", "name": "Assets & PDF Generation (Grindor)" },
+        { "id": "12372", "name": "Cart, Promotions & Coupons" },
+        { "id": "12929", "name": "Channel Dev" },
+        { "id": "12368", "name": "CMS & TMS" },
+        { "id": "12377", "name": "Communications & Shortlinks" },
+        { "id": "14051", "name": "ConnectAI" },
+        { "id": "12371", "name": "Delivery Partner Extensions" },
+        { "id": "12864", "name": "Documentation" },
+        { "id": "12599", "name": "FDK" },
+        { "id": "12376", "name": "Finance" },
+        { "id": "12401", "name": "Fynd Platform Helm" },
+        { "id": "12665", "name": "JCP Core Deployments" },
+        { "id": "12632", "name": "JCP Merge Conflicts" },
+        { "id": "12375", "name": "OMS (Avis)" },
+        { "id": "13292", "name": "Other" },
+        { "id": "12995", "name": "Partners" },
+        { "id": "13589", "name": "Payment Extension" },
+        { "id": "12378", "name": "Payments (Gringotts)" },
+        { "id": "12374", "name": "Platform Authentication & Authorisation" },
+        { "id": "12863", "name": "Platform Config" },
+        { "id": "12381", "name": "Platform Frontend" },
+        { "id": "12373", "name": "Product & Inventory, Pricing and Discounts (Wildrider, Solr, Catalog)" },
+        { "id": "14084", "name": "Sentry" },
+        { "id": "12370", "name": "Serviceability" },
+        { "id": "13172", "name": "SRE" },
+        { "id": "12896", "name": "Store OS and SnG" },
+        { "id": "12698", "name": "Swapeasy Extension" },
+        { "id": "12369", "name": "Theme, SEO" },
+        { "id": "12380", "name": "Webhook, Analytics & Audit Trails" }
+      ]
+    },
+    "environment": {
+      "fieldId": "customfield_12691",
+      "name": "Environment",
+      "values": [
+        { "id": "18665", "value": "Sandbox" },
+        { "id": "18666", "value": "SIT" },
+        { "id": "18667", "value": "UAT" },
+        { "id": "18668", "value": "Prod" }
+      ]
+    },
+    "jcpCluster": {
+      "fieldId": "customfield_11371",
+      "name": "JCP Cluster",
+      "values": [
+        { "id": "15530", "value": "JMD" },
+        { "id": "15531", "value": "JMRT-BAU" },
+        { "id": "15532", "value": "NETMEDS" },
+        { "id": "15533", "value": "JMP (Metro, DMS)" },
+        { "id": "15534", "value": "SnG (Multi-Tenant)" },
+        { "id": "15535", "value": "SWADESH" },
+        { "id": "15536", "value": "TIRA" },
+        { "id": "15537", "value": "JMRT-RHOS" },
+        { "id": "15563", "value": "AJIO" },
+        { "id": "15761", "value": "All JCP Clusters" },
+        { "id": "16916", "value": "Sandbox" },
+        { "id": "18039", "value": "Reliance Jewels" },
+        { "id": "22427", "value": "JMRT GCP" }
+      ]
+    },
+    "jcpChannel": {
+      "fieldId": "customfield_10455",
+      "name": "JCP Channel",
+      "values": [
+        { "id": "13238", "value": "JioMart" },
+        { "id": "13239", "value": "JioMart Digital" },
+        { "id": "13240", "value": "JioMart Partner" },
+        { "id": "13241", "value": "Tira" },
+        { "id": "13242", "value": "Swadesh" },
+        { "id": "13250", "value": "Urban Ladder" },
+        { "id": "13243", "value": "Reliance Jewels" },
+        { "id": "13244", "value": "Scan & Go" },
+        { "id": "13245", "value": "7Eleven" },
+        { "id": "13246", "value": "Netmeds" },
+        { "id": "13247", "value": "WMS" },
+        { "id": "13248", "value": "TMS" },
+        { "id": "14348", "value": "Impetus" },
+        { "id": "13249", "value": "Azorte" },
+        { "id": "13251", "value": "Milkbasket" },
+        { "id": "13252", "value": "Ajio" },
+        { "id": "13354", "value": "JioGames" },
+        { "id": "18005", "value": "All JCP Channels" },
+        { "id": "27046", "value": "Shein" }
+      ]
+    }
+  },
+  "optionalFields": {
+    "affectedSystems": {
+      "fieldId": "customfield_10056",
+      "name": "Affected Systems",
+      "type": "array",
+      "commonValues": [
+        { "id": "10262", "value": "Blitzkrieg" },
+        { "id": "10143", "value": "convex" },
+        { "id": "10291", "value": "Highbrow" },
+        { "id": "10083", "value": "jetfire" },
+        { "id": "11125", "value": "Skyfire" },
+        { "id": "10315", "value": "Scattershot" }
+      ]
+    },
+    "fixVersions": {
+      "fieldId": "fixVersions",
+      "name": "Fix versions",
+      "type": "array",
+      "commonValues": [
+        { "id": "23623", "name": "Fynd Platform v1.10.7" }
+      ]
+    },
+    "productManager": {
+      "fieldId": "customfield_10261",
+      "name": "Product Manager",
+      "type": "user"
+    },
+    "engineeringLead": {
+      "fieldId": "customfield_10055",
+      "name": "Engineering Lead",
+      "type": "user"
+    },
+    "assignedDeveloper": {
+      "fieldId": "customfield_10091",
+      "name": "Assigned Developer",
+      "type": "user"
+    },
+    "assignedQA": {
+      "fieldId": "customfield_10054",
+      "name": "Assigned QA",
+      "type": "user"
+    },
+    "startDate": {
+      "fieldId": "customfield_10015",
+      "name": "Start date",
+      "type": "date"
+    },
+    "qaStartDate": {
+      "fieldId": "customfield_10416",
+      "name": "QA Start Date",
+      "type": "date"
+    },
+    "sitDueDate": {
+      "fieldId": "customfield_12790",
+      "name": "SIT Due Date",
+      "type": "date"
+    },
+    "qaSitDate": {
+      "fieldId": "customfield_12856",
+      "name": "QA SIT Date",
+      "type": "date"
+    },
+    "storyPoints": {
+      "fieldId": "customfield_10016",
+      "name": "Story Points",
+      "type": "number",
+      "alternateFieldId": "customfield_10026"
+    },
+    "qaStoryPoints": {
+      "fieldId": "customfield_10075",
+      "name": "QA Story Points",
+      "type": "number"
+    },
+    "dueDate": {
+      "fieldId": "duedate",
+      "name": "Due Date",
+      "type": "date"
+    }
+  },
+  "issueTypes": [
+    { "id": "10000", "name": "Epic" },
+    { "id": "10001", "name": "Story" },
+    { "id": "10002", "name": "Task" },
+    { "id": "10003", "name": "Sub-task" },
+    { "id": "10004", "name": "Bug" },
+    { "id": "10005", "name": "Defect" },
+    { "id": "10024", "name": "Documentation" },
+    { "id": "10151", "name": "Release" },
+    { "id": "10487", "name": "Sync Conflict" },
+    { "id": "10520", "name": "Tech-Debt" }
+  ],
+  "defaults": {
+    "component": { "id": "12632", "name": "JCP Merge Conflicts" },
+    "environment": { "id": "18668", "value": "Prod" },
+    "jcpCluster": { "id": "15761", "value": "All JCP Clusters" },
+    "jcpChannel": { "id": "18005", "value": "All JCP Channels" },
+    "productManager": {
+      "accountId": "62b1a5dedcafd965c5ddca80",
+      "name": "Mahima Ramprasad",
+      "email": "mahimaramprasad@gofynd.com"
+    }
+  },
+  "engineeringLeadMapping": {
+    "themes": {
+      "lead": {
+        "accountId": "62b2c23a673f2103622e6675",
+        "name": "Harpreet Chawla",
+        "email": "harpreetchawla@gofynd.com"
+      },
+      "services": ["Blitzkrieg", "Skyfire", "Jetfire", "Scattershot"]
+    },
+    "nonThemes": {
+      "lead": {
+        "accountId": "62b1b064cebad33432f6d729",
+        "name": "Bipin Singh",
+        "email": "bipinsingh@gofynd.com"
+      },
+      "services": ["convex", "Highbrow"]
+    }
+  }
+}

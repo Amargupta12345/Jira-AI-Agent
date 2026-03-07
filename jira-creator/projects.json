@@ -1,0 +1,3982 @@
+[
+  {
+    "id": "10203",
+    "key": "ACDM",
+    "name": "FyndAcademy",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10578",
+    "key": "ACM",
+    "name": "Access Management",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "12491",
+    "key": "AF",
+    "name": "Affordplan",
+    "issueTypes": [
+      {
+        "id": "11312",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "11313",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "11314",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "11315",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "11316",
+        "name": "Subtask",
+        "subtask": true
+      }
+    ]
+  },
+  {
+    "id": "11039",
+    "key": "AICC",
+    "name": "AI Catalog",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11963",
+    "key": "AJIO",
+    "name": "AJIO",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10520",
+        "name": "Tech-Debt",
+        "subtask": false
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10175",
+    "key": "AMNT",
+    "name": "Amante",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11502",
+    "key": "AP",
+    "name": "AI Photoshoot Project Tracker",
+    "issueTypes": [
+      {
+        "id": "10587",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10588",
+        "name": "Sub-task",
+        "subtask": true
+      }
+    ]
+  },
+  {
+    "id": "11503",
+    "key": "APPR",
+    "name": "AI Photoshoot ML Roadmap",
+    "issueTypes": [
+      {
+        "id": "10589",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10590",
+        "name": "Sub-task",
+        "subtask": true
+      }
+    ]
+  },
+  {
+    "id": "10085",
+    "key": "ARCV",
+    "name": "Central Archived Backlog ",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10454",
+    "key": "BB",
+    "name": "B2B Commerce",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10577",
+    "key": "BOLT",
+    "name": "Boltic",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10421",
+        "name": "Boltic Integration",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10450",
+    "key": "CAA",
+    "name": "Central Automation & Analytics",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10421",
+        "name": "Boltic Integration",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11270",
+    "key": "CAB",
+    "name": "JCP CAB",
+    "issueTypes": [
+      {
+        "id": "10454",
+        "name": "Idea",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10089",
+    "key": "CACL",
+    "name": "Catalog Cloud",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11568",
+    "key": "CAI",
+    "name": "Connect AI",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10520",
+        "name": "Tech-Debt",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10072",
+    "key": "CASH",
+    "name": "Cashiness",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11435",
+    "key": "CBIT",
+    "name": "CoBoltic Implementation Tracker",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10095",
+    "key": "CCP",
+    "name": "Unified Customer Platform - Archived",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10213",
+    "key": "CGL",
+    "name": "Commerce Global",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10108",
+    "key": "CML",
+    "name": "Commerce ML",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10103",
+    "key": "COCT",
+    "name": "Commerce Control Tower",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10176",
+    "key": "COPN",
+    "name": "Fynd Coupons ",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "13757",
+    "key": "CORX",
+    "name": "Cortex",
+    "issueTypes": [
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10070",
+        "name": "DevSecOps Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10058",
+        "name": "Change Request",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10127",
+    "key": "CPLT",
+    "name": "Kaily AI",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10204",
+    "key": "CRM",
+    "name": "Change Request",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10140",
+    "key": "CXR",
+    "name": "GlamAR",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10132",
+    "key": "DCCP",
+    "name": "Devops Cloud Capacity Planning",
+    "issueTypes": [
+      {
+        "id": "10130",
+        "name": "New Infrastructure Creation",
+        "subtask": false
+      },
+      {
+        "id": "10131",
+        "name": "Modify Infrastructure",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10021",
+    "key": "DOPS",
+    "name": "DevOps",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10043",
+    "key": "DOSH",
+    "name": "Potlee",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11699",
+    "key": "DSAI",
+    "name": "Design Studio & AI Photoshoot",
+    "issueTypes": [
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10070",
+        "name": "DevSecOps Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10058",
+        "name": "Change Request",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10063",
+    "key": "DSOP",
+    "name": "DevSecOps",
+    "issueTypes": [
+      {
+        "id": "10070",
+        "name": "DevSecOps Task",
+        "subtask": false
+      },
+      {
+        "id": "10083",
+        "name": "InfoSec Security Incident",
+        "subtask": false
+      },
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10084",
+        "name": "DevSecOps SubTask",
+        "subtask": true
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10122",
+        "name": "Security Deployment Review",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11666",
+    "key": "DT",
+    "name": "Design Team",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      }
+    ]
+  },
+  {
+    "id": "10973",
+    "key": "DX",
+    "name": "DX",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10907",
+    "key": "ENT",
+    "name": "Enterprise",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "12458",
+    "key": "ERP",
+    "name": "ERP (Enterprise Resource Planning)",
+    "issueTypes": [
+      {
+        "id": "11279",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "11280",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "11281",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "11282",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "11283",
+        "name": "Subtask",
+        "subtask": true
+      }
+    ]
+  },
+  {
+    "id": "10091",
+    "key": "FACL",
+    "name": "Fynd Advance Commerce Lab",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10447",
+    "key": "FCC",
+    "name": "Fynd Central Console",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11602",
+    "key": "FCES",
+    "name": "FC Engg Support",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "14990",
+    "key": "FCP",
+    "name": "Fynd Create - Product",
+    "issueTypes": [
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10070",
+        "name": "DevSecOps Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10058",
+        "name": "Change Request",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10158",
+    "key": "FCPS",
+    "name": "Fynd Commerce Platform Support",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10448",
+    "key": "FDS",
+    "name": "Fynd Design System",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10445",
+    "key": "FE",
+    "name": "Fynd Engage",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10346",
+    "key": "FEA",
+    "name": "Fynd External Apps",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10777",
+    "key": "FEC",
+    "name": "Fynd Extensions Communication",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10643",
+    "key": "FEL",
+    "name": "Fynd Extensions Logistic",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10776",
+    "key": "FEP",
+    "name": "Fynd Extensions Payment",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10775",
+    "key": "FEPSD",
+    "name": "Fynd Extensions Product, Search & Discovery",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11601",
+    "key": "FESS",
+    "name": "FC Engineering Support System",
+    "issueTypes": [
+      {
+        "id": "10652",
+        "name": "Improvement",
+        "subtask": false
+      },
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "11369",
+    "key": "FEXP",
+    "name": "Fynd Express",
+    "issueTypes": [
+      {
+        "id": "10002",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Sub-task",
+        "subtask": true
+      },
+      {
+        "id": "10001",
+        "name": "Story",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10000",
+        "name": "Epic",
+        "subtask": false
+      },
+      {
+        "id": "10024",
+        "name": "Documentation",
+        "subtask": false
+      },
+      {
+        "id": "10005",
+        "name": "Defect",
+        "subtask": true
+      },
+      {
+        "id": "10487",
+        "name": "Sync Conflict",
+        "subtask": false
+      },
+      {
+        "id": "10030",
+        "name": "Design",
+        "subtask": false
+      },
+      {
+        "id": "10065",
+        "name": "Mobile Bug",
+        "subtask": false
+      },
+      {
+        "id": "10032",
+        "name": "Test",
+        "subtask": false
+      },
+      {
+        "id": "10077",
+        "name": "Test Execution",
+        "subtask": false
+      },
+      {
+        "id": "10017",
+        "name": "Support",
+        "subtask": false
+      },
+      {
+        "id": "10016",
+        "name": "New Feature",
+        "subtask": false
+      },
+      {
+        "id": "10151",
+        "name": "Release",
+        "subtask": false
+      },
+      {
+        "id": "10164",
+        "name": "Research",
+        "subtask": false
+      },
+      {
+        "id": "10177",
+        "name": "RHOS item",
+        "subtask": false
+      },
+      {
+        "id": "10179",
+        "name": "RHOS test",
+        "subtask": false
+      },
+      {
+        "id": "10178",
+        "name": "RHOS Bug",
+        "subtask": false
+      },
+      {
+        "id": "10185",
+        "name": "Kafka Topic",
+        "subtask": false
+      },
+      {
+        "id": "10301",
+        "name": "Sub Task",
+        "subtask": false
+      },
+      {
+        "id": "10157",
+        "name": "Initiative",
+        "subtask": false
+      },
+      {
+        "id": "10784",
+        "name": "FC Engineering Support",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "id": "10179",
+    "key": "FINC",
+    "name": "Finance",
+    "issueTypes": [
+      {
+        "id": "10162",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10163",
+        "name": "Sub-task",
+        "subtask": true
+      }
+    ]
+  }
+]
