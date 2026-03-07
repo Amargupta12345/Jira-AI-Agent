@@ -15,7 +15,7 @@ import { writePromptFile, writeLogFile } from './log-writer.js';
  *
  * @returns {Promise<{stdout: string, stderr: string, exitCode: number, duration: number}>}
  */
-export function spawnRuntime({ command, args, workingDir, timeout, label, logDir, ticketKey, provider, prompt, artifactDir, onEvent }) {
+export function spawnRuntime({ command, args, workingDir, timeout, label, logDir, ticketKey, provider, prompt, artifactDir, onEvent, env = {} }) {
   log(`[${label}] Spawning ${command} (timeout=${Math.round(timeout / 60000)}min)...`);
   debug(`[${label}] Working directory: ${workingDir}`);
   writePromptFile(artifactDir, label, prompt);
@@ -36,9 +36,13 @@ export function spawnRuntime({ command, args, workingDir, timeout, label, logDir
 
     const proc = nodeSpawn(command, args, {
       cwd: workingDir,
-      env: { ...process.env },
+      env: { ...process.env, ...env },
       stdio: ['pipe', 'pipe', 'pipe'],
     });
+
+    if (Object.keys(env).length > 0) {
+      debug(`[${label}] Injected env keys: ${Object.keys(env).join(', ')}`);
+    }
 
     proc.stdin.end();
     log(`[${label}] Process spawned (PID: ${proc.pid})`);

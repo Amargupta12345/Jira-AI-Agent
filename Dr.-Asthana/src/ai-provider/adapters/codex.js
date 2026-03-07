@@ -19,27 +19,20 @@ export function buildArgs(prompt, modeConfig) {
   const model = modeConfig.model || null;
   const resumeSessionId = modeConfig.resumeSessionId || null;
 
-  let args;
-
-  if (resumeSessionId) {
-    // Resume: codex exec resume <threadId> "<prompt>" --json --full-auto
-    args = [
-      'exec', 'resume', resumeSessionId, prompt,
-      '--json',
-      '--full-auto',
-    ];
-  } else {
-    // Fresh: codex exec "<prompt>" --json --full-auto
-    args = [
-      'exec', prompt,
-      '--json',
-      '--full-auto',
-    ];
-  }
+  const args = ['exec'];
 
   if (model) {
     args.push('--model', model);
   }
+
+  // Flags must come before positional arguments in some versions of Codex CLI
+  args.push('--json', '--full-auto');
+
+  if (resumeSessionId) {
+    args.push('resume', resumeSessionId);
+  }
+
+  args.push(prompt);
 
   return {
     args,

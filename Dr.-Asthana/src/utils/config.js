@@ -81,6 +81,9 @@ export function loadConfig() {
     council: buildCouncilConfig(raw),
     prReviewCouncil: buildPrReviewCouncilConfig(raw),
     aiProvider: buildAiProviderConfig(raw),
+    openai: {
+      apiKey: raw.openai?.apiKey || null,
+    },
     infra: {
       enabled: raw.infra?.enabled ?? false,
       scriptsDir: raw.infra?.scriptsDir || '',

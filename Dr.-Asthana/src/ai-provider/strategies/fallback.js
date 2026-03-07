@@ -66,6 +66,7 @@ async function runProvider(providerName, prompt, workingDir, modeConfig, adapter
       provider: providerName,
       prompt,
       artifactDir: options.artifactDir,
+      env: options.env || {},
     });
 
     const parsed = adapter.parseStreamOutput(raw.stdout, raw.exitCode);

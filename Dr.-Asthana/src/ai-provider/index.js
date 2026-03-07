@@ -71,6 +71,11 @@ export async function runAI(options) {
     log(`[${label}] Prompt length: ${prompt.length} characters`);
 
     const { args, timeout } = adapter.buildArgs(prompt, effectiveConfig);
+    const env = {};
+    if (providerName === 'codex' && config.openai?.apiKey) {
+      env.OPENAI_API_KEY = config.openai.apiKey;
+    }
+
     const raw = await spawn({
       command: adapter.getCommand(),
       args,
@@ -82,6 +87,7 @@ export async function runAI(options) {
       provider: providerName,
       prompt,
       artifactDir,
+      env,
     });
 
     const parsed = adapter.parseStreamOutput(raw.stdout, raw.exitCode);
@@ -108,6 +114,11 @@ export async function runAI(options) {
   log(`[${label}] runAI: mode=${mode}, strategy=${strategy}, provider=${modeConfig.provider || 'claude'}`);
   log(`[${label}] Prompt length: ${prompt.length} characters`);
 
+  const env = {};
+  if (config.openai?.apiKey) {
+    env.OPENAI_API_KEY = config.openai.apiKey;
+  }
+
   const result = await strategyFn(prompt, workingDir, modeConfig, ADAPTERS, spawn, {
     label,
     logDir,
@@ -115,6 +126,7 @@ export async function runAI(options) {
     mode,
     resumeSessionId,
     artifactDir,
+    env,
   });
 
   log(`[${label}] runAI complete: provider=${result.provider}, exit=${result.exitCode}, duration=${Math.floor(result.duration / 1000)}s, output=${result.output?.length || 0} chars${result.sessionId ? `, session=${result.sessionId.substring(0, 8)}...` : ''}`);
