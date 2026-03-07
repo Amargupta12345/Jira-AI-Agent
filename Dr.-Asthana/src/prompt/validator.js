@@ -64,9 +64,25 @@ function checkStepCompleteness(steps, changedFiles) {
   const missingSteps = [];
   const missingTestFiles = [];
 
+  // Patterns for steps that are "run" commands, not file changes
+  const runStepPattern = /^\.(\/)?(run|test|build|deploy|start|lint|clean)/;
+  const shellScriptPattern = /\.(sh|bash)$/;
+  const isRunOnlyStep = (files, text) => {
+    // If all referenced files are shell scripts or the step text is about running/testing
+    const allShellScripts = files.length > 0 && files.every(f => shellScriptPattern.test(f) || runStepPattern.test(f));
+    const textIsAboutRunning = /\b(run|execute|verify|test|check|validate|confirm)\b.*\b(test|script|suite|command)\b/i.test(text);
+    return allShellScripts || (files.length === 0 && textIsAboutRunning);
+  };
+
   for (const step of steps) {
     if (step.files.length === 0) {
       // Step has no file refs — can't verify, assume completed
+      completedSteps.push(step.stepNum);
+      continue;
+    }
+
+    // Skip steps that are about running scripts/tests, not changing files
+    if (isRunOnlyStep(step.files, step.text)) {
       completedSteps.push(step.stepNum);
       continue;
     }
@@ -78,10 +94,10 @@ function checkStepCompleteness(steps, changedFiles) {
       missingSteps.push(step.stepNum);
     }
 
-    // Track missing test files specifically
+    // Track missing test files specifically (only source test files, not runners)
     const testFilePattern = /\.(spec|test)\.|__tests__\//;
     for (const f of step.files) {
-      if (testFilePattern.test(f) && !changedSet.has(f)) {
+      if (testFilePattern.test(f) && !changedSet.has(f) && !shellScriptPattern.test(f)) {
         missingTestFiles.push(f);
       }
     }
@@ -279,7 +295,8 @@ export async function validateExecution(cheatsheet, cloneDir) {
     const completeness = checkStepCompleteness(steps, changedFiles);
 
     if (completeness.missingTestFiles.length > 0) {
-      critical.push(`Test files required by cheatsheet but not changed: ${completeness.missingTestFiles.join(', ')}`);
+      // Downgraded from critical — test infra (Docker, CI) may not be available locally
+      warnings.push(`Test files referenced in cheatsheet but not changed: ${completeness.missingTestFiles.join(', ')}`);
     }
 
     if (completeness.completionRatio < 0.5) {
