@@ -70,28 +70,49 @@ export async function runAI(options) {
     log(`[${label}] runAI: mode=${mode}, direct provider=${providerName}, model=${effectiveConfig.model || 'default'}${resumeSessionId ? `, resume=${resumeSessionId.substring(0, 8)}...` : ''}`);
     log(`[${label}] Prompt length: ${prompt.length} characters`);
 
-    const { args, timeout } = adapter.buildArgs(prompt, effectiveConfig);
-    const env = {};
-    if (providerName === 'codex' && config.openai?.apiKey) {
-      env.OPENAI_API_KEY = config.openai.apiKey;
+    const runWithProvider = async (pName, pConfig) => {
+      const pAdapter = ADAPTERS[pName];
+      const { args, timeout } = pAdapter.buildArgs(prompt, pConfig);
+      const env = {};
+      if (pName === 'codex' && config.openai?.apiKey) {
+        env.OPENAI_API_KEY = config.openai.apiKey;
+      }
+
+      const raw = await spawn({
+        command: pAdapter.getCommand(),
+        args,
+        workingDir,
+        timeout,
+        label: pName === providerName ? label : `${label}-fallback`,
+        logDir,
+        ticketKey,
+        provider: pName,
+        prompt,
+        artifactDir,
+        env,
+      });
+
+      const parsed = pAdapter.parseStreamOutput(raw.stdout, raw.exitCode);
+      return buildResult(raw, parsed, pName, pAdapter);
+    };
+
+    let result = await runWithProvider(providerName, effectiveConfig);
+
+    // Fallback logic for providerConfig path
+    const fallbackName = providerConfig.fallbackProvider;
+    if (fallbackName && ADAPTERS[fallbackName]) {
+      const primaryAdapter = ADAPTERS[providerName];
+      const isGarbage = primaryAdapter.isGarbageOutput ? primaryAdapter.isGarbageOutput(result.output) : (!result.output || result.output.trim().length < 10);
+
+      if (!result.completedNormally || result.rateLimited || isGarbage) {
+        log(`[${label}] Primary ${providerName} failed (exit=${result.exitCode}, rateLimited=${result.rateLimited}, garbage=${isGarbage}), falling back to ${fallbackName}`);
+        result = await runWithProvider(fallbackName, {
+          ...effectiveConfig,
+          provider: fallbackName,
+          model: effectiveConfig[fallbackName]?.model || null,
+        });
+      }
     }
-
-    const raw = await spawn({
-      command: adapter.getCommand(),
-      args,
-      workingDir,
-      timeout,
-      label,
-      logDir,
-      ticketKey,
-      provider: providerName,
-      prompt,
-      artifactDir,
-      env,
-    });
-
-    const parsed = adapter.parseStreamOutput(raw.stdout, raw.exitCode);
-    const result = buildResult(raw, parsed, providerName, adapter);
 
     log(`[${label}] runAI complete: provider=${result.provider}, exit=${result.exitCode}, duration=${Math.floor(result.duration / 1000)}s, output=${result.output?.length || 0} chars${result.sessionId ? `, session=${result.sessionId.substring(0, 8)}...` : ''}`);
     return result;

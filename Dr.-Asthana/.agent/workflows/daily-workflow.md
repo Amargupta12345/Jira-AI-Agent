@@ -1,8 +1,8 @@
 ---
-description: Daily workflow for using Dr. Asthana to auto-generate PRs from JIRA tickets
+description: Daily workflow for using NEXUS to auto-generate PRs from JIRA tickets
 ---
 
-# Dr. Asthana — Daily Workflow
+# NEXUS — Daily Workflow
 
 ## Quick Start (3 commands)
 
@@ -29,12 +29,12 @@ node jira-cli.mjs create \
 ### 2. Add the trigger label
 
 ```bash
-node jira-cli.mjs label add JCP-XXXX dr-asthana
+node jira-cli.mjs label add JCP-XXXX nexus
 ```
 
 Replace `JCP-XXXX` with the ticket key from step 1.
 
-### 3. Run Dr. Asthana
+### 3. Run NEXUS
 
 ```bash
 cd /Users/amargupta/Documents/AI-Agent/Dr.-Asthana
@@ -100,13 +100,13 @@ node jira-cli.mjs view JCP-XXXX
 
 ### Search tickets
 ```bash
-node jira-cli.mjs search --jql "project = JCP AND labels = dr-asthana"
+node jira-cli.mjs search --jql "project = JCP AND labels = nexus"
 ```
 
 ### Add/remove labels
 ```bash
-node jira-cli.mjs label add JCP-XXXX dr-asthana
-node jira-cli.mjs label remove JCP-XXXX dr-asthana
+node jira-cli.mjs label add JCP-XXXX nexus
+node jira-cli.mjs label remove JCP-XXXX nexus
 ```
 
 ### Transition a ticket
@@ -146,7 +146,7 @@ cd /Users/amargupta/Documents/AI-Agent/Dr.-Asthana
 | Description | ✅ Yes | Detailed explanation | Main AI input |
 | Affected Systems | ✅ Yes | `Blitzkrieg` | Must match config `services` key (case-insensitive) |
 | Fix Version | ✅ Yes | `Fynd Platform v1.10.6` | Maps to branch `version/1.10.6` |
-| Label | ✅ Yes | `dr-asthana` | Trigger label |
+| Label | ✅ Yes | `nexus` | Trigger label |
 | Multiple Affected Systems | ❌ No | — | Split into separate tickets |
 | Multiple Fix Versions | ❌ No | — | Split into separate tickets |
 

@@ -1,37 +1,26 @@
-# Auto Dev Agent (Dr. Asthana) v2
+# NEXUS v2 — Autonomous Dev Agent
 
 An autonomous AI developer agent that picks up JIRA tickets, runs a multi-agent council to debate implementation strategy, and submits draft PRs for human review.
 
-## Architecture: Council-then-Execute
+## Architecture: Multi-Agent Council
 
-The core insight: **expensive models think together, a cheap model does the work.**
+NEXUS uses a sophisticated multi-agent architecture to ensure high-quality code changes. The core philosophy is **"Expensive models think together, a cheap model does the work."**
 
-```
-JIRA Ticket
-    ↓
-┌─────────────────────────────────────────────────────────────┐
-│  COUNCIL (expensive models, read-only tools)                │
-│                                                             │
-│  Round 1..N:                                                │
-│    Proposer → explores codebase, proposes strategy          │
-│    Critics  → adversarial review, must find 3+ issues       │
-│    Agreement → AGREED (all critiques addressed) or DISAGREE │
-│                                                             │
-│  All discussions written to files for full visibility.      │
-│  Agents have session memory — no rework across rounds.      │
-│  Human feedback via human-feedback.md at any time.          │
-│                                                             │
-│  ↓ Quality gate: structural checks + AI evaluator           │
-│  ↓ Extract cheatsheet between configurable markers          │
-└─────────────────────────────────────────────────────────────┘
-    ↓
-┌─────────────────────────────────────────────────────────────┐
-│  EXECUTE (cheap model, full tools)                          │
-│  Follows cheatsheet exactly. No planning. No decisions.     │
-└─────────────────────────────────────────────────────────────┘
-    ↓
-Validate (critical/warnings) → Diff Review + PR Review Council → Commit → Push → PR on Azure DevOps
-```
+![NEXUS Architecture](/Users/amargupta/.gemini/antigravity/brain/ac2ec47f-a0ae-44c3-bdef-f3547c60b976/dr_asthana_architecture.png)
+
+### Agent Interaction Flow
+
+1.  **The Council (Planning Phase)**:
+    *   **Proposer (Agent A)**: Explores the codebase and generates initial solutions.
+    *   **Critic (Agent B)**: Analyzes the proposal, providing adversarial feedback and identifying potential issues.
+    *   **Debate & Refinement**: The Proposer and Critic engage in multiple rounds of debate to refine the strategy.
+    *   **Evaluator (Agent C)**: Assesses the final proposal and the debate history. If satisfied, it produces the **Finalized Cheatsheet**.
+
+2.  **The Executor (Implementation Phase)**:
+    *   **Executor Agent**: Follows the Finalized Cheatsheet exactly. It has full tool access (Read, Write, Edit, Bash) to apply code modifications to the **Target Repository**.
+
+3.  **Validation & PR Review**:
+    *   After execution, a second council (the **PR Review Council**) validates the changes against the JIRA ticket and the code diff before raising the Pull Request on Azure DevOps.
 
 The **cheatsheet** is the most valuable artifact. It's persisted to disk so failed executions can retry without re-running the council.
 

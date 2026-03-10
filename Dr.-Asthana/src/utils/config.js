@@ -126,13 +126,17 @@ function buildPrReviewCouncilConfig(raw) {
 }
 
 function buildCouncilConfigSection(councilRaw = {}) {
-  const normalizeMember = (member, defaults) => ({
-    provider: member?.provider || defaults.provider,
-    model: member?.model || defaults.model,
-    maxTurns: member?.maxTurns || defaults.maxTurns,
-    timeoutMinutes: member?.timeoutMinutes || defaults.timeoutMinutes,
-    allowedTools: member?.allowedTools || defaults.allowedTools,
-  });
+  const normalizeMember = (member, defaults) => {
+    const provider = member?.provider || defaults.provider;
+    return {
+      provider,
+      fallbackProvider: member?.fallbackProvider || null,
+      model: member?.model !== undefined ? member.model : (provider === defaults.provider ? defaults.model : null),
+      maxTurns: member?.maxTurns || defaults.maxTurns,
+      timeoutMinutes: member?.timeoutMinutes || defaults.timeoutMinutes,
+      allowedTools: member?.allowedTools || defaults.allowedTools,
+    };
+  };
   const debateDefaults = {
     provider: 'claude',
     model: 'sonnet',

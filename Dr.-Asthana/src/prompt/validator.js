@@ -299,9 +299,10 @@ export async function validateExecution(cheatsheet, cloneDir) {
       warnings.push(`Test files referenced in cheatsheet but not changed: ${completeness.missingTestFiles.join(', ')}`);
     }
 
-    if (completeness.completionRatio < 0.5) {
-      critical.push(`Low completion ratio: ${Math.round(completeness.completionRatio * 100)}% of cheatsheet steps have matching file changes (steps missing: ${completeness.missingSteps.join(', ')})`);
-    } else if (completeness.missingSteps.length > 0) {
+    // Downgraded from critical — cheatsheet step count ≠ file count (one step may touch many files,
+    // and Codex fallback after a Claude rate-limit may not follow cheatsheet structure verbatim).
+    // Never block ship over a heuristic file-count mismatch; the diff review catches real issues.
+    if (completeness.missingSteps.length > 0) {
       warnings.push(`Cheatsheet steps with no matching file changes: ${completeness.missingSteps.join(', ')} (${Math.round(completeness.completionRatio * 100)}% complete)`);
     }
 

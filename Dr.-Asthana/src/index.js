@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Dr. Asthana v2 - CLI Entry Point
+ * NEXUS v2 - CLI Entry Point
  *
  * Commands:
  *   daemon                      Run the poll loop continuously
@@ -59,7 +59,7 @@ async function runDryRun(config) {
 }
 
 async function runDaemon(config) {
-  log('== Dr. Asthana v2 ==');
+  log('== NEXUS v2 ==');
   log('');
   log(`Poll interval:    ${config.agent.pollInterval}s`);
   log(`Max per cycle:    ${config.agent.maxTicketsPerCycle}`);

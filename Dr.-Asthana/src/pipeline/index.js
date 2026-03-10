@@ -70,7 +70,7 @@ export async function runPipeline(config, ticketOrKey) {
     const validationErrors = validateTicket(config, ticket);
     if (validationErrors.length > 0) {
       for (const error of validationErrors) warn(`Validation failed: ${error}`);
-      await postComment(ticketKey, `Dr. Asthana: Cannot process ticket.\n\nValidation errors:\n${validationErrors.map(e => '- ' + e).join('\n')}`);
+      await postComment(ticketKey, `NEXUS: Cannot process ticket.\n\nValidation errors:\n${validationErrors.map(e => '- ' + e).join('\n')}`);
       endStep(false, `Validation failed: ${validationErrors.join(', ')}`);
       finalizeRun(false, 'Validation failed');
       return { success: false, reason: 'validation_failed', errors: validationErrors };
@@ -138,8 +138,8 @@ export async function runPipeline(config, ticketOrKey) {
     if (allPRs.length === 0) {
       warn('No PRs created across any service/branch');
       const noPrMsg = artifactUrl
-        ? `Dr. Asthana: No PRs created. Manual implementation may be needed.\n\nRun Artifact: ${artifactUrl}`
-        : 'Dr. Asthana: No PRs created. Manual implementation may be needed.';
+        ? `NEXUS: No PRs created. Manual implementation may be needed.\n\nRun Artifact: ${artifactUrl}`
+        : 'NEXUS: No PRs created. Manual implementation may be needed.';
       await postComment(ticketKey, noPrMsg);
       endStep(false, 'No PRs created');
       finalizeRun(false, 'No PRs created');
@@ -197,8 +197,8 @@ export async function runPipeline(config, ticketOrKey) {
       }
 
       const failMsg = failArtifactUrl
-        ? `Dr. Asthana failed: ${error.message}\n\nRun Artifact: ${failArtifactUrl}`
-        : `Dr. Asthana failed: ${error.message}`;
+        ? `NEXUS failed: ${error.message}\n\nRun Artifact: ${failArtifactUrl}`
+        : `NEXUS failed: ${error.message}`;
       await postComment(ticketKey, failMsg);
       await notifySlackFailure(config, ticketKey, { key: ticketKey, summary: ticketKey }, error, failArtifactUrl);
     } catch (e) {

@@ -66,7 +66,7 @@ export async function notifySlackSuccess(config, ticketKey, summary, allPRs, all
 export async function notifySlackFailure(config, ticketKey, ticketData, error, artifactUrl) {
   const report = buildFailureReport(error, 'pipeline', ticketData, artifactUrl);
   if (report.slack) {
-    await sendDM(config, report.slack, `Dr. Asthana failed for ${ticketKey}: ${typeof error === 'string' ? error : error.message}`);
+    await sendDM(config, report.slack, `NEXUS failed for ${ticketKey}: ${typeof error === 'string' ? error : error.message}`);
   }
 }
 

@@ -452,7 +452,20 @@ async function handleTransition({ flags, positional }) {
 
     const body = { transition: { id: match.id } };
     if (Object.keys(customFields).length > 0) {
-      body.fields = customFields;
+      // If 'update' is provided as a field, move it to the top-level 'update' key
+      if (customFields.update) {
+        try {
+          body.update = typeof customFields.update === 'string'
+            ? JSON.parse(customFields.update)
+            : customFields.update;
+          delete customFields.update;
+        } catch (e) {
+          console.error(`  Error parsing 'update' field as JSON: ${e.message}`);
+        }
+      }
+      if (Object.keys(customFields).length > 0) {
+        body.fields = customFields;
+      }
     }
 
     await jiraPost(`/rest/api/3/issue/${issueKey}/transitions`, body);
