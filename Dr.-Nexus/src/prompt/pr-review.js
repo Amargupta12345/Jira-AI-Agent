@@ -39,7 +39,7 @@ export async function reviewPullRequest(ticketData, cloneDir, config, options = 
     goal: 'Review this proposed PR diff and decide if it is safe to ship.',
     context: reviewContext,
     workingDir: cloneDir,
-    roles: getReviewRoles(),
+    roles: getReviewRoles(ticketData.type),
     prompts: {
       buildProposer: buildReviewProposerPrompt,
       buildCritic: buildReviewCriticPrompt,
@@ -73,7 +73,11 @@ export async function reviewPullRequest(ticketData, cloneDir, config, options = 
   }
 
   const parsed = parseReviewReport(result.output, result.rounds);
-  if (parsed.verdict === 'REJECT' || parsed.critical.length > 0) {
+  if (parsed.verdict === 'REJECT' && parsed.critical.length === 0) {
+    warn('PR review report marked REJECT without critical findings; treating as warnings-only approval');
+  }
+
+  if (parsed.critical.length > 0) {
     return {
       status: 'rejected',
       critical: parsed.critical,

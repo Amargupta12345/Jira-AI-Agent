@@ -1,0 +1,10 @@
+{
+  "name": "sentry-alert",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Sentry CLI + MCP server — list issues, events, stack traces, resolve alerts",
+  "bin": {
+    "sentry-cli": "./sentry-cli.mjs",
+    "sentry-mcp": "./mcp-server.mjs"
+  }
+}

@@ -9,15 +9,22 @@ export function getStaticPrompt() {
 ## Rules
 
 1. **Follow the cheatsheet exactly.** Do not explore, plan, or think about alternatives. The cheatsheet is your complete instruction set.
-2. **Do not modify files not mentioned in the cheatsheet.** If a file is not listed, do not touch it.
-3. **If a step is unclear, do your best interpretation and move on.** Do not stop to ask questions.
+2. **Only modify files listed in the cheatsheet.** One exception: if you discover a file that will directly break because of a change listed in the cheatsheet (e.g. it imports a symbol you are removing or renaming), you MAY fix that file and note it in RISKS. Do not use this exception to expand scope.
+3. **If a step is unclear, read the relevant file first, then apply your best interpretation and move on.** Do not stop to ask questions.
 4. **Do not run git commands** (git add, git commit, git push, git tag, etc.).
 5. **Do not run deploy-base or any deployment scripts.**
 6. **Do not modify Dockerfiles** (FROM lines, base images, etc.).
 7. **Do not run docker commands.**
-8. **npm install/ci is allowed** for dependency management.
+8. **npm/pnpm install is allowed** for dependency management only.
 9. **Do not run tests or lint** unless the cheatsheet explicitly says to.
-10. **Do not manually edit package-lock.json** — use npm commands.
+10. **Do not manually edit package-lock.json or pnpm-lock.yaml** — use package manager commands.
+
+## Bug Fix Discipline
+
+If the cheatsheet is for a bug fix (contains a "Root Cause" section):
+- Make the smallest possible change that resolves the root cause
+- Do NOT refactor, reformat, or improve code outside the fix
+- If you see related issues while reading the file, note them in RISKS but do NOT fix them
 
 ## Shell Commands — MANDATORY file redirection
 
@@ -37,5 +44,5 @@ When you are done, you MUST end with this exact format:
 
 **FILES CHANGED:** <list of files you modified or created>
 **SUMMARY:** <2-3 sentences of what was done>
-**RISKS:** <anything the reviewer should pay attention to>`;
+**RISKS:** <anything the reviewer should pay attention to, including any extra files you touched under rule 2's exception>`;
 }

@@ -114,9 +114,24 @@ export function getCommand() {
 }
 
 /**
- * Check if output indicates Codex rate limiting.
+ * Check if output indicates Codex / OpenAI rate limiting or quota exhaustion.
+ *
+ * Covers:
+ * - OpenAI API errors: rate_limit_exceeded, 429, Too Many Requests
+ * - Context window: context_length_exceeded
+ * - Generic: "rate limit" (case-insensitive)
+ * - Claude-style strings in case of mix-ups: "you've hit your limit", "resets "
  */
 export function isRateLimited(output) {
   if (!output) return false;
-  return output.includes('rate limit') || output.includes('Rate limit');
+  const lower = output.toLowerCase();
+  return (
+    lower.includes('rate limit') ||
+    lower.includes('rate_limit_exceeded') ||
+    lower.includes('too many requests') ||
+    lower.includes('context_length_exceeded') ||
+    lower.includes('429') ||
+    lower.includes("you've hit your limit") ||
+    lower.includes('resets ')
+  );
 }

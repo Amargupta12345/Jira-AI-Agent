@@ -66,6 +66,10 @@ export function loadConfig() {
       org: raw.azureDevOps.org,
       project: raw.azureDevOps.project,
       repoBaseUrl: raw.azureDevOps.repoBaseUrl,
+      pat: raw.azureDevOps.pat || null,
+      patEnvVar: raw.azureDevOps.patEnvVar || null,
+      tokenCommand: raw.azureDevOps.tokenCommand || null,
+      sourceZshrc: raw.azureDevOps.sourceZshrc ?? false,
     },
     services: raw.services || {},
     slack: {
@@ -84,6 +88,7 @@ export function loadConfig() {
     openai: {
       apiKey: raw.openai?.apiKey || null,
     },
+    sentry: buildSentryConfig(raw),
     infra: {
       enabled: raw.infra?.enabled ?? false,
       scriptsDir: raw.infra?.scriptsDir || '',
@@ -97,7 +102,7 @@ export function loadConfig() {
   return config;
 }
 
-function buildModeConfig(modeRaw, defaults) {
+function buildModeConfig(modeRaw, defaults, openaiApiKey) {
   const { claudeModel, claudeMaxTurns, claudeTimeout, codexTimeout, allowedTools } = defaults;
   return {
     provider: modeRaw?.provider || 'claude',
@@ -112,6 +117,10 @@ function buildModeConfig(modeRaw, defaults) {
     codex: {
       model: modeRaw?.codex?.model || null,
       timeoutMinutes: modeRaw?.codex?.timeoutMinutes || codexTimeout,
+      allowedTools: modeRaw?.codex?.allowedTools || allowedTools,
+      // Auto-populated from top-level openai.apiKey — no need to set it twice.
+      // This is injected as OPENAI_API_KEY env when Codex is spawned.
+      apiKey: modeRaw?.codex?.apiKey || openaiApiKey || null,
     },
   };
 }
@@ -166,15 +175,39 @@ function buildCouncilConfigSection(councilRaw = {}) {
 
 function buildAiProviderConfig(raw) {
   const ai = raw.aiProvider || {};
+  const openaiApiKey = raw.openai?.apiKey || null;
 
   const execute = {
     ...buildModeConfig(ai.execute, {
       claudeModel: 'haiku', claudeMaxTurns: 30, claudeTimeout: 15,
       codexTimeout: 15, allowedTools: 'Read,Write,Edit,Bash,Glob,Grep',
-    }),
+    }, openaiApiKey),
   };
 
   return { strategy: ai.strategy || 'single', execute };
+}
+
+function buildSentryConfig(raw) {
+  const s = raw.sentry || {};
+
+  // Prefer credentials from the shared sentry-alert/sentry-config.json when it exists.
+  // This keeps authToken and orgSlug in one place across the CLI, MCP server, and Dr.-Nexus.
+  let sharedCreds = {};
+  const sharedPath = path.join(path.dirname(CONFIG_PATH), '..', 'sentry-alert', 'sentry-config.json');
+  if (fs.existsSync(sharedPath)) {
+    try {
+      sharedCreds = JSON.parse(fs.readFileSync(sharedPath, 'utf-8'));
+    } catch { /* ignore parse errors, fall back to config.json values */ }
+  }
+
+  return {
+    authToken: sharedCreds.authToken || s.authToken || null,
+    baseUrl: ((sharedCreds.baseUrl || s.baseUrl || 'https://sentry.io')).replace(/\/$/, ''),
+    orgSlug: sharedCreds.orgSlug || s.orgSlug || null,
+    pollInterval: s.pollInterval || 300,
+    stateDir: s.stateDir || '.sentry-state',
+    services: s.services || {},
+  };
 }
 
 /**

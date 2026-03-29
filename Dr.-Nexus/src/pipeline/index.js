@@ -38,9 +38,12 @@ const { log, ok, warn, err, startStep, endStep, initRun, finalizeRun, getRunLogP
  *
  * @param {object} config - Full config object
  * @param {string|object} ticketOrKey - Ticket key string or ticket object from search
+ * @param {object} [options]
+ * @param {number} [options.fromStep=1] - Step number to start from (used by resume)
  * @returns {Promise<{success: boolean, prs?: object[], errors?: string[]}>}
  */
-export async function runPipeline(config, ticketOrKey) {
+export async function runPipeline(config, ticketOrKey, options = {}) {
+  const fromStep = typeof options.fromStep === 'number' ? options.fromStep : 1;
   const ticketKey = typeof ticketOrKey === 'string' ? ticketOrKey : ticketOrKey.key;
   const runCtx = { infraStarted: false };
 
@@ -48,16 +51,33 @@ export async function runPipeline(config, ticketOrKey) {
   config._currentTicketKey = ticketKey;
 
   const runId = initRun(ticketKey, config.agent.logDir);
-  log(`Processing: ${ticketKey} (Run ID: ${runId})`);
+  log(`Processing: ${ticketKey} (Run ID: ${runId})${fromStep > 1 ? ` — resuming from step ${fromStep}` : ''}`);
+
+  // Load checkpoint data once up front when resuming
+  let checkpointData = null;
+  if (fromStep > 1) {
+    checkpointData = loadCheckpoint(ticketKey);
+    if (!checkpointData) {
+      warn(`No checkpoint found for ${ticketKey} — running from step 1`);
+    }
+  }
 
   try {
-    // ══════ Step 1: FETCH_TICKET ══════
-    startStep(1, 'Fetch and parse ticket');
-    const rawTicket = await getTicketDetails(config, ticketKey);
-    const ticket = parseTicket(config, rawTicket);
-    displayTicketDetails(ticket, logger);
-    saveCheckpoint(ticketKey, STEPS.FETCH_TICKET, { ticketData: ticket });
-    endStep(true, `Ticket fetched: ${ticket.summary.substring(0, 50)}...`);
+    let ticket;
+
+    if (fromStep <= 1) {
+      // ══════ Step 1: FETCH_TICKET ══════
+      startStep(1, 'Fetch and parse ticket');
+      const rawTicket = await getTicketDetails(config, ticketKey);
+      ticket = parseTicket(config, rawTicket);
+      displayTicketDetails(ticket, logger);
+      saveCheckpoint(ticketKey, STEPS.FETCH_TICKET, { ticketData: ticket });
+      endStep(true, `Ticket fetched: ${ticket.summary.substring(0, 50)}...`);
+    } else {
+      ticket = checkpointData?.ticketData;
+      if (!ticket) throw new Error(`Cannot resume from step ${fromStep}: no ticket data in checkpoint`);
+      log(`Step 1 skipped (resuming from step ${fromStep}): using checkpoint ticket data`);
+    }
 
     // Set artifact directory so downstream modules write AI call logs there
     const artifactDir = getCheckpointPath(ticketKey);
@@ -65,30 +85,34 @@ export async function runPipeline(config, ticketOrKey) {
     const aiCallsDir = path.join(artifactDir, 'ai-calls');
     if (!fs.existsSync(aiCallsDir)) fs.mkdirSync(aiCallsDir, { recursive: true });
 
-    // ══════ Step 2: VALIDATE_TICKET ══════
-    startStep(2, 'Validate ticket fields');
-    const validationErrors = validateTicket(config, ticket);
-    if (validationErrors.length > 0) {
-      for (const error of validationErrors) warn(`Validation failed: ${error}`);
-      await postComment(ticketKey, `NEXUS: Cannot process ticket.\n\nValidation errors:\n${validationErrors.map(e => '- ' + e).join('\n')}`);
-      endStep(false, `Validation failed: ${validationErrors.join(', ')}`);
-      finalizeRun(false, 'Validation failed');
-      return { success: false, reason: 'validation_failed', errors: validationErrors };
-    }
-    saveCheckpoint(ticketKey, STEPS.VALIDATE_TICKET, { ticketData: ticket });
-    endStep(true, 'All required fields present');
+    if (fromStep <= 2) {
+      // ══════ Step 2: VALIDATE_TICKET ══════
+      startStep(2, 'Validate ticket fields');
+      const validationErrors = validateTicket(config, ticket);
+      if (validationErrors.length > 0) {
+        for (const error of validationErrors) warn(`Validation failed: ${error}`);
+        await postComment(ticketKey, `NEXUS: Cannot process ticket.\n\nValidation errors:\n${validationErrors.map(e => '- ' + e).join('\n')}`);
+        endStep(false, `Validation failed: ${validationErrors.join(', ')}`);
+        finalizeRun(false, 'Validation failed');
+        return { success: false, reason: 'validation_failed', errors: validationErrors };
+      }
+      saveCheckpoint(ticketKey, STEPS.VALIDATE_TICKET, { ticketData: ticket });
+      endStep(true, 'All required fields present');
 
-    // Transition to In-Progress + comment (both non-blocking, independent)
-    try {
-      await transitionToInProgress(config, ticketKey);
-    } catch (e) {
-      warn(`In-Progress transition failed (non-blocking): ${e.message}`);
-    }
-    try {
-      await postInProgressComment(config, ticketKey, ticket);
-      log(`In-Progress comment posted for ${ticketKey}`);
-    } catch (e) {
-      warn(`In-Progress comment failed (non-blocking): ${e.message}`);
+      // Transition to In-Progress + comment (both non-blocking, independent)
+      try {
+        await transitionToInProgress(config, ticketKey);
+      } catch (e) {
+        warn(`In-Progress transition failed (non-blocking): ${e.message}`);
+      }
+      try {
+        await postInProgressComment(config, ticketKey, ticket);
+        log(`In-Progress comment posted for ${ticketKey}`);
+      } catch (e) {
+        warn(`In-Progress comment failed (non-blocking): ${e.message}`);
+      }
+    } else {
+      log(`Steps 1-2 skipped (resuming from step ${fromStep})`);
     }
 
     // ══════ Steps 3-7: Single service, single branch ══════
@@ -107,7 +131,7 @@ export async function runPipeline(config, ticketOrKey) {
     try {
       const result = await processServiceBranch(
         config, ticket, serviceConfig, repoUrl, ticketKey,
-        baseBranch, version, runCtx
+        baseBranch, version, runCtx, fromStep, checkpointData
       );
 
       if (result.pr) {
@@ -216,6 +240,13 @@ export async function runPipeline(config, ticketOrKey) {
 /**
  * Resume a failed run from a specific step.
  *
+ * Steps 1-2  (FETCH_TICKET, VALIDATE_TICKET) — skipped, ticket data loaded from checkpoint.
+ * Step  3    (CLONE_REPO)                    — always re-runs (tmp dir was cleaned up).
+ * Step  4    (BUILD_CHEATSHEET)              — skipped when fromStep >= 5 and cheatsheet in checkpoint.
+ * Steps 5-6  (EXECUTE, VALIDATE_EXECUTION)  — skipped when fromStep >= 7.
+ * Step  7    (SHIP)                          — always re-runs.
+ * Step  8    (NOTIFY)                        — always re-runs.
+ *
  * @param {object} config
  * @param {string} ticketKey
  * @param {number|string} fromStep - Step number or name to resume from
@@ -226,31 +257,109 @@ export async function resume(config, ticketKey, fromStep) {
     throw new Error(`No checkpoint found for ${ticketKey}`);
   }
 
-  log(`Resuming ${ticketKey} from step ${fromStep}`);
-  log(`Checkpoint timestamp: ${checkpoint.timestamp}`);
-
-  // If resuming from step 5+, verify cheatsheet exists
   const stepNum = typeof fromStep === 'number' ? fromStep : getStepNumber(fromStep);
+
+  log(`Resuming ${ticketKey} from step ${stepNum}`);
+  log(`Checkpoint timestamp: ${checkpoint.timestamp}`);
+  log(`Checkpoint last completed step: ${checkpoint.currentStep}`);
+
+  if (!checkpoint.ticketData) {
+    throw new Error('Cannot resume: no ticket data in checkpoint');
+  }
+
   if (stepNum >= 5 && !checkpoint.cheatsheet) {
-    throw new Error(`Cannot resume from step ${fromStep}: no cheatsheet found in checkpoint`);
+    throw new Error(`Cannot resume from step ${stepNum}: no cheatsheet found in checkpoint. Run from step 4 or earlier.`);
   }
 
-  // If resuming from step 3+, verify clone dir exists (or re-clone)
-  if (stepNum >= 3 && checkpoint.cloneDir) {
-    const { existsSync } = await import('fs');
-    if (!existsSync(checkpoint.cloneDir)) {
-      log(`Clone dir ${checkpoint.cloneDir} no longer exists, will re-clone at step 3`);
-      checkpoint.cloneDir = null;
+  return runPipeline(config, ticketKey, { fromStep: stepNum });
+}
+
+/**
+ * Create or recover a PR directly from checkpoint data.
+ *
+ * Intended for auth-recovery scenarios where the branch is already pushed and
+ * only Azure DevOps PR creation needs to be retried with manual auth.
+ *
+ * @param {object} config
+ * @param {string} ticketKey
+ * @returns {Promise<{success: boolean, pr?: object, reason?: string}>}
+ */
+export async function createPrFromCheckpoint(config, ticketKey) {
+  const checkpoint = loadCheckpoint(ticketKey);
+  if (!checkpoint) {
+    throw new Error(`No checkpoint found for ${ticketKey}`);
+  }
+
+  const ticket = checkpoint.ticketData;
+  if (!ticket) {
+    throw new Error(`Cannot create PR for ${ticketKey}: missing ticket data in checkpoint`);
+  }
+
+  const serviceName = checkpoint.serviceName || ticket.affectedSystems?.[0];
+  const serviceConfig = getServiceConfig(config, serviceName);
+  if (!serviceConfig?.repo) {
+    throw new Error(`Cannot create PR for ${ticketKey}: unknown service "${serviceName}"`);
+  }
+
+  const sourceBranch = checkpoint.featureBranch;
+  if (!sourceBranch) {
+    throw new Error(`Cannot create PR for ${ticketKey}: missing feature branch in checkpoint`);
+  }
+
+  const targetBranch = checkpoint.branchName || ticket.targetBranch;
+  if (!targetBranch) {
+    throw new Error(`Cannot create PR for ${ticketKey}: missing target branch`);
+  }
+
+  const cheatsheet = checkpoint.cheatsheet || '';
+  const version = ticket.targetBranches?.[0]?.version || null;
+
+  config._currentTicketKey = ticketKey;
+  config._artifactDir = getCheckpointPath(ticketKey);
+
+  const runId = initRun(ticketKey, config.agent.logDir);
+  log(`Creating PR from checkpoint: ${ticketKey} (Run ID: ${runId})`);
+
+  try {
+    startStep(7, `Create PR for ${serviceConfig.repo}/${targetBranch}`);
+    const prResult = await createPR(
+      config,
+      null,
+      sourceBranch,
+      targetBranch,
+      ticketKey,
+      ticket.summary,
+      cheatsheet,
+      {
+        validationIssues: [],
+        critical: [],
+        repoName: serviceConfig.repo,
+      }
+    );
+
+    if (!prResult?.prId) {
+      endStep(false, 'PR creation failed');
+      finalizeRun(false, 'PR creation failed');
+      return { success: false, reason: 'pr_creation_failed' };
     }
-  }
 
-  // Re-run pipeline with checkpoint data
-  // For now, re-run from the beginning with saved ticket data
-  if (checkpoint.ticketData) {
-    return runPipeline(config, ticketKey);
+    const action = prResult.alreadyExists ? 'updated' : 'created';
+    endStep(true, `PR #${prResult.prId} (${action})`);
+    finalizeRun(true, `PR #${prResult.prId} ${action}`);
+    return {
+      success: true,
+      pr: {
+        prId: prResult.prId,
+        prUrl: prResult.prUrl,
+        baseBranch: targetBranch,
+        version,
+      },
+    };
+  } catch (error) {
+    err(`Failed to create PR from checkpoint for ${ticketKey}: ${error.message}`);
+    finalizeRun(false, `Error: ${error.message}`);
+    throw error;
   }
-
-  throw new Error('Cannot resume: insufficient checkpoint data');
 }
 
 function mergeWarnings(validationResult, warnings = [], label) {
@@ -286,12 +395,17 @@ function buildReviewRetryFeedback(prReview, criticalIssues) {
 
 /**
  * Process a single (service, branch) combination through steps 3-7.
+ *
+ * Step 3 (clone) always runs — the tmp dir is cleaned up between runs.
+ * Step 4 (cheatsheet) is skipped when fromStep >= 5 and a checkpoint cheatsheet exists.
+ * Steps 5-6 (execute + validate) are skipped when fromStep >= 7.
+ * Step 7 (ship) always runs.
  */
-async function processServiceBranch(config, ticket, serviceConfig, repoUrl, ticketKey, baseBranch, version, runCtx) {
+async function processServiceBranch(config, ticket, serviceConfig, repoUrl, ticketKey, baseBranch, version, runCtx, fromStep = 1, checkpointData = null) {
   let tmpDir = null;
 
   try {
-    // Step 3: CLONE_REPO
+    // Step 3: CLONE_REPO — always runs (tmp dir was cleaned after the previous run)
     startStep(3, `Clone ${serviceConfig.repo} (${baseBranch})`);
     const cloneResult = await cloneAndBranch(config, repoUrl, baseBranch, ticketKey, ticket.summary, version);
     tmpDir = cloneResult.tmpDir;
@@ -318,100 +432,115 @@ async function processServiceBranch(config, ticket, serviceConfig, repoUrl, tick
       }
     }
 
-    // Step 4: BUILD_CHEATSHEET
-    startStep(4, `Build cheatsheet for ${serviceConfig.repo}/${baseBranch}`);
     const checkpointDir = getCheckpointPath(ticketKey);
-    const cheatsheetResult = await buildCheatsheet(ticket, tmpDir, config, {
-      checkpointDir,
-      ticketKey,
-    });
+    let cheatsheet;
 
-    if (cheatsheetResult.status === 'rejected') {
-      warn(`Cheatsheet rejected (${cheatsheetResult.phase}): ${cheatsheetResult.reason}`);
-      endStep(false, `Rejected: ${cheatsheetResult.reason}`);
-      await postJiraStep(ticketKey, 'Cheatsheet Rejected', cheatsheetResult.reason);
-      return { pr: null, error: `Cheatsheet rejected: ${cheatsheetResult.reason}`, cheatsheetSummary: '' };
-    }
+    // Step 4: BUILD_CHEATSHEET — skip if resuming from step 5+ and cheatsheet is in checkpoint
+    if (fromStep >= 5 && checkpointData?.cheatsheet) {
+      cheatsheet = checkpointData.cheatsheet;
+      startStep(4, `Build cheatsheet (skipped — resuming from step ${fromStep})`);
+      log(`Using checkpoint cheatsheet (${cheatsheet.length} chars)`);
+      endStep(true, `Checkpoint cheatsheet loaded (${cheatsheet.length} chars)`);
+    } else {
+      startStep(4, `Build cheatsheet for ${serviceConfig.repo}/${baseBranch}`);
+      const cheatsheetResult = await buildCheatsheet(ticket, tmpDir, config, {
+        checkpointDir,
+        ticketKey,
+      });
 
-    const cheatsheet = cheatsheetResult.cheatsheet;
-    saveCheckpoint(ticketKey, STEPS.BUILD_CHEATSHEET, {
-      ticketData: ticket,
-      cloneDir: tmpDir,
-      featureBranch,
-      cheatsheet,
-      cheatsheetPath: `${checkpointDir}/cheatsheet.md`,
-    });
-    endStep(true, `Cheatsheet ready (${cheatsheet.length} chars)`);
-
-    // Step 5: EXECUTE (with retries)
-    let executionResult;
-    let validationResult;
-    const maxRetries = config.agent.executionRetries || 2;
-    let retryFeedback = '';
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      startStep(5, `Execute cheatsheet (attempt ${attempt}/${maxRetries})`);
-      executionResult = await execute(cheatsheet, tmpDir, config, { feedback: retryFeedback });
-
-      if (!executionResult.output || executionResult.output.trim() === '') {
-        warn(`Execution attempt ${attempt} produced no output`);
-        endStep(false, 'No output');
-        if (attempt < maxRetries) continue;
-        return { pr: null, error: 'Execution produced no output', cheatsheetSummary: cheatsheet };
+      if (cheatsheetResult.status === 'rejected') {
+        warn(`Cheatsheet rejected (${cheatsheetResult.phase}): ${cheatsheetResult.reason}`);
+        endStep(false, `Rejected: ${cheatsheetResult.reason}`);
+        await postJiraStep(ticketKey, 'Cheatsheet Rejected', cheatsheetResult.reason);
+        return { pr: null, error: `Cheatsheet rejected: ${cheatsheetResult.reason}`, cheatsheetSummary: '' };
       }
 
-      saveCheckpoint(ticketKey, STEPS.EXECUTE, {
+      cheatsheet = cheatsheetResult.cheatsheet;
+      saveCheckpoint(ticketKey, STEPS.BUILD_CHEATSHEET, {
         ticketData: ticket,
         cloneDir: tmpDir,
         featureBranch,
         cheatsheet,
-        executionOutput: executionResult.output.substring(0, 5000),
+        cheatsheetPath: `${checkpointDir}/cheatsheet.md`,
       });
-      endStep(true, executionResult.completedNormally ? 'Execution completed' : `Exit code ${executionResult.exitCode}`);
+      endStep(true, `Cheatsheet ready (${cheatsheet.length} chars)`);
+    }
 
-      // Step 6: VALIDATE_EXECUTION
-      startStep(6, 'Validate execution result');
-      validationResult = await validateExecution(cheatsheet, tmpDir);
+    // Steps 5-6: EXECUTE + VALIDATE — skip if resuming from step 7+
+    let validationResult = { valid: true, warnings: [], critical: [], issues: [] };
 
-      // Retry only on critical issues (not warnings)
-      if (validationResult.critical?.length > 0 && attempt < maxRetries) {
-        warn(`Execution validation critical (attempt ${attempt}): ${validationResult.critical.join(', ')}`);
-        retryFeedback = `Execution validation failed with critical issues:\n${validationResult.critical.map((c) => `- CRITICAL: ${c}`).join('\n')}`;
-        endStep(false, 'Critical issues, retrying...');
-        continue;
-      }
+    if (fromStep >= 7) {
+      log(`Steps 5-6 skipped (resuming from step ${fromStep}): proceeding directly to ship`);
+    } else {
+      // Step 5: EXECUTE (with retries)
+      let executionResult;
+      const maxRetries = config.agent.executionRetries || 2;
+      let retryFeedback = '';
 
-      if (validationResult.warnings?.length > 0) {
-        warn(`Validation warnings: ${validationResult.warnings.join(', ')}`);
-      }
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        startStep(5, `Execute cheatsheet (attempt ${attempt}/${maxRetries})`);
+        executionResult = await execute(cheatsheet, tmpDir, config, { feedback: retryFeedback });
 
-      // Run structural diff review
-      const diffReview = await reviewDiff(tmpDir);
-      mergeWarnings(validationResult, diffReview.warnings, 'Diff review warnings');
+        if (!executionResult.output || executionResult.output.trim() === '') {
+          warn(`Execution attempt ${attempt} produced no output`);
+          endStep(false, 'No output');
+          if (attempt < maxRetries) continue;
+          return { pr: null, error: 'Execution produced no output', cheatsheetSummary: cheatsheet };
+        }
 
-      let prReviewCriticalIssues = [];
-      if (validationResult.valid) {
-        // Run dedicated PR-review council (independent from cheatsheet council)
-        const prReview = await reviewPullRequest(ticket, tmpDir, config, {
-          checkpointDir,
-          ticketKey,
-          baseBranch,
-          preWarnings: diffReview.warnings,
+        saveCheckpoint(ticketKey, STEPS.EXECUTE, {
+          ticketData: ticket,
+          cloneDir: tmpDir,
+          featureBranch,
+          cheatsheet,
+          executionOutput: executionResult.output.substring(0, 5000),
         });
+        endStep(true, executionResult.completedNormally ? 'Execution completed' : `Exit code ${executionResult.exitCode}`);
 
-        prReviewCriticalIssues = applyPrReviewResult(validationResult, prReview);
-        if (prReviewCriticalIssues.length > 0 && attempt < maxRetries) {
-          const reviewRetryFeedback = buildReviewRetryFeedback(prReview, prReviewCriticalIssues);
-          retryFeedback = [retryFeedback, reviewRetryFeedback].filter(Boolean).join('\n\n');
-          endStep(false, 'PR review rejected, retrying execution...');
+        // Step 6: VALIDATE_EXECUTION
+        startStep(6, 'Validate execution result');
+        validationResult = await validateExecution(cheatsheet, tmpDir);
+
+        // Retry only on critical issues (not warnings)
+        if (validationResult.critical?.length > 0 && attempt < maxRetries) {
+          warn(`Execution validation critical (attempt ${attempt}): ${validationResult.critical.join(', ')}`);
+          retryFeedback = `Execution validation failed with critical issues:\n${validationResult.critical.map((c) => `- CRITICAL: ${c}`).join('\n')}`;
+          endStep(false, 'Critical issues, retrying...');
           continue;
         }
-      } else {
-        warn('Skipping PR review — validation already failed');
-      }
 
-      endStep(validationResult.valid, validationResult.valid ? 'Validation passed' : `Issues: ${validationResult.issues.join(', ')}`);
-      break;
+        if (validationResult.warnings?.length > 0) {
+          warn(`Validation warnings: ${validationResult.warnings.join(', ')}`);
+        }
+
+        // Run structural diff review
+        const diffReview = await reviewDiff(tmpDir);
+        mergeWarnings(validationResult, diffReview.warnings, 'Diff review warnings');
+
+        let prReviewCriticalIssues = [];
+        if (validationResult.valid) {
+          // Run dedicated PR-review council (independent from cheatsheet council)
+          const prReview = await reviewPullRequest(ticket, tmpDir, config, {
+            checkpointDir,
+            ticketKey,
+            baseBranch,
+            preWarnings: diffReview.warnings,
+          });
+
+          prReviewCriticalIssues = applyPrReviewResult(validationResult, prReview);
+          if (prReviewCriticalIssues.length > 0 && attempt < maxRetries) {
+            const reviewRetryFeedback = buildReviewRetryFeedback(prReview, prReviewCriticalIssues);
+            retryFeedback = [retryFeedback, reviewRetryFeedback].filter(Boolean).join('\n\n');
+            endStep(false, 'PR review rejected, retrying execution...');
+            continue;
+          }
+        } else {
+          warn('Skipping PR review — validation already failed');
+        }
+
+        endStep(validationResult.valid, validationResult.valid ? 'Validation passed' : `Issues: ${validationResult.issues.join(', ')}`);
+        break;
+      }
     }
 
     // Block shipping if critical validation issues remain after all attempts

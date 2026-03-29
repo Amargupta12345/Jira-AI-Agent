@@ -140,7 +140,7 @@ Edit `config.json` in the project root. See `config.example.json` for the full s
 | Section | What it configures |
 |---|---|
 | `jira` | baseUrl, email, apiToken, trigger label, done label, custom field IDs |
-| `azureDevOps` | org URL, project, SSH repo base URL |
+| `azureDevOps` | org URL, project, SSH repo base URL, optional PAT or PAT env var for PR creation |
 | `services` | map of service name -> { repo } |
 | `slack` | botToken, userId for DM notifications |
 | `agent` | pollInterval (300s), maxTicketsPerCycle (1), logDir, executionRetries |
@@ -174,7 +174,14 @@ pnpm install
 cp config.example.json config.json  # then fill in your values
 ```
 
-Ensure `az` CLI is authenticated for Azure DevOps and the configured AI CLI (`claude` and/or `codex`) is available on PATH.
+Ensure `az` CLI is installed and either:
+
+- authenticated for Azure DevOps via `az login` / `az devops login`, or
+- given a PAT through `azureDevOps.pat`, `azureDevOps.patEnvVar`, or `AZURE_DEVOPS_EXT_PAT`
+
+Git push and PR creation use different auth paths: SSH can push successfully while Azure DevOps PR creation still fails if the Azure CLI has no valid API credential.
+
+The configured AI CLI (`claude` and/or `codex`) must also be available on PATH.
 For length-safe summaries, ensure `aisum` is installed on PATH.
 
 ## Running
@@ -191,4 +198,15 @@ pnpm run dry-run
 
 # Resume a failed run from a specific step
 pnpm run resume -- JCP-123 --from-step=5
+
+# Retry only PR creation from checkpoint after fixing Azure auth
+node src/index.js create-pr JCP-123
+
+# List Sentry issues without creating Jira
+node src/index.js sentry-poll
+
+# Create Jira only for a chosen Sentry issue ID
+node src/index.js sentry-jira 135345
 ```
+
+See [`AUTOMATION_RUNBOOK.md`](./AUTOMATION_RUNBOOK.md) for the full Sentry -> Jira -> agent -> Azure DevOps operational flow.

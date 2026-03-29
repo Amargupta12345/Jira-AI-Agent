@@ -20,7 +20,33 @@ const CHEATSHEET_MARKERS = {
   end: '=== CHEATSHEET END ===',
 };
 
-const PROPOSER_ROLE =
+const PROPOSER_ROLE_BUG =
+  'This is a BUG ticket. Follow this strict sequence before proposing anything:\n\n' +
+  '## Step A — Root Cause Analysis (mandatory)\n' +
+  'Read the error message, stack trace, and ticket description carefully. ' +
+  'Use Read/Glob/Grep to trace the exact file and function where the bug lives. ' +
+  'You MUST state your root cause in a "## Root Cause" section with:\n' +
+  '- Exact file path + function name + line number\n' +
+  '- One sentence: why this is wrong\n' +
+  '- What the correct behaviour should be\n\n' +
+  '## Step B — Minimal Fix Plan\n' +
+  'Propose ONLY the minimal changes needed to fix the root cause. Do NOT:\n' +
+  '- Refactor unrelated code\n' +
+  '- Improve code quality beyond the fix scope\n' +
+  '- Change any file not directly implicated by the stack trace or root cause\n\n' +
+  'For each file in your plan, provide exact code snippets showing the before/after diff. ' +
+  'For every change, explain WHY it fixes the root cause.\n\n' +
+  '## Step C — Side Effects\n' +
+  'Identify direct side effects: imports that will break, callers that need updating, tests that cover the changed code. ' +
+  'These are part of the fix — include them.\n\n' +
+  '## Step D — Acceptance Criteria\n' +
+  'State concretely how you would verify the bug is fixed (test case, log output, or runtime behaviour).\n\n' +
+  'IMPORTANT — Testing & Validation:\n' +
+  '- The service\'s own instruction file (CLAUDE.md/codex.md/README.md) is included above in "Service Rules". ' +
+  'Use EXACTLY those test commands — do NOT invent ad-hoc grep/rg validation commands.\n' +
+  '- If mock files or test setup files (setupFilesAfterEnv, __mocks__) reference the changed module, they MUST be updated.';
+
+const PROPOSER_ROLE_TASK =
   'Explore the codebase using Read/Glob/Grep tools. ' +
   'Propose a detailed implementation strategy for this ticket. ' +
   'List every file to change, what to change, and in what order. ' +
@@ -35,7 +61,21 @@ const PROPOSER_ROLE =
   '- If mock files or test setup files (setupFilesAfterEnv, __mocks__) reference modules you are changing or removing, ' +
   'they MUST be updated or removed in your plan.';
 
-const CRITIC_ROLE =
+const CRITIC_ROLE_BUG =
+  'You are an adversarial reviewer for a BUG fix. Your job is to find PROBLEMS, not to agree. ' +
+  'Explore the codebase using Read/Glob/Grep tools to independently verify every claim in the proposal.\n\n' +
+  '**Primary checks for bug fixes:**\n' +
+  '- **Wrong root cause**: Is the identified file:line actually where the bug is? Trace the stack yourself.\n' +
+  '- **Incomplete fix**: Does the proposed change fully resolve the symptom, or does the bug persist through another path?\n' +
+  '- **Missing side effects**: Direct callers, importers, or related models that are not in the plan but will break\n' +
+  '- **Missing tests**: The specific test case that would catch this bug regression is not in the plan\n' +
+  '- **Over-scope**: Changes that touch files beyond the bug\'s blast radius (potential for regression)\n\n' +
+  'You MUST identify at least 3 concrete issues. For each, cite the exact file path and line. ' +
+  'Do NOT say "looks good" or "I agree". End with a complete corrected strategy.\n\n' +
+  'IMPORTANT: Check the service\'s own instruction file in "Service Rules" for test commands. ' +
+  'Verify the proposal uses those — not ad-hoc commands.';
+
+const CRITIC_ROLE_TASK =
   'You are an adversarial reviewer. Your job is to find PROBLEMS, not to agree. ' +
   'Explore the codebase using Read/Glob/Grep tools to independently verify every claim in the proposal. ' +
   'You MUST identify at least 3 concrete issues from these categories:\n' +
@@ -50,10 +90,32 @@ const CRITIC_ROLE =
   'IMPORTANT: Check the service\'s own instruction file (CLAUDE.md/codex.md/README.md in the "Service Rules" section above) ' +
   'for test commands and validation steps. Verify the proposal uses those — not ad-hoc grep/rg commands.';
 
-function buildExtractorPrompt(councilOutput, ticketContext, force) {
+function getProposerRole(ticketType) {
+  const isBug = ticketType && ticketType.toLowerCase() === 'bug';
+  return isBug ? PROPOSER_ROLE_BUG : PROPOSER_ROLE_TASK;
+}
+
+function getCriticRole(ticketType) {
+  const isBug = ticketType && ticketType.toLowerCase() === 'bug';
+  return isBug ? CRITIC_ROLE_BUG : CRITIC_ROLE_TASK;
+}
+
+function buildExtractorPrompt(councilOutput, ticketContext, force, ticketType) {
   const modeInstruction = force
     ? 'You MUST produce a cheatsheet even if the debate output is imperfect. Do your best.'
     : 'Only approve if the debate output contains a clear, actionable implementation plan.';
+
+  const isBug = ticketType && ticketType.toLowerCase() === 'bug';
+
+  const bugRequirements = isBug ? `
+For BUG tickets, the cheatsheet MUST include:
+- A "## Root Cause" section: exact file, function, and line where the bug lives + one-sentence explanation
+- A "## Fix" section: minimal code changes with before/after snippets
+- A "## Acceptance Criteria" section: how to verify the fix works
+- Only files directly implicated by the bug — no scope creep
+
+REJECT if the debate output does NOT contain a clearly identified root cause with a specific file:line reference.
+` : '';
 
   return `You are a quality evaluator for an AI code implementation debate.
 
@@ -65,7 +127,7 @@ ${councilOutput}
 
 ## Your Task
 ${modeInstruction}
-
+${bugRequirements}
 Evaluate the debate output and either:
 1. Write "APPROVED" followed by a clean, actionable cheatsheet extracted from the debate, OR
 2. Write "REJECTED" followed by specific feedback about what's missing.
@@ -108,13 +170,20 @@ export async function buildCheatsheet(ticketData, cloneDir, config, options = {}
 
   // 3. Configure and run council
   log('Starting council...');
+  const proposerRole = getProposerRole(ticketData.type);
+  const criticRole = getCriticRole(ticketData.type);
+  const isBug = ticketData.type && ticketData.type.toLowerCase() === 'bug';
+  log(`Council mode: ${isBug ? 'BUG (root-cause-first)' : 'TASK (feature strategy)'}`);
+
   const council = createCouncil({
-    goal: 'Propose a detailed implementation strategy for this ticket.',
+    goal: isBug
+      ? 'Identify the root cause of this bug and propose a minimal, targeted fix.'
+      : 'Propose a detailed implementation strategy for this ticket.',
     context: `${ticketContext}\n\n## Codebase Context\n\n${codebaseContext}`,
     workingDir: cloneDir,
     roles: {
-      proposer: PROPOSER_ROLE,
-      critic: CRITIC_ROLE,
+      proposer: proposerRole,
+      critic: criticRole,
     },
     prompts: {
       buildProposer: buildProposerPrompt,
@@ -122,7 +191,7 @@ export async function buildCheatsheet(ticketData, cloneDir, config, options = {}
       buildAgreement: buildAgreementPrompt,
     },
     evaluation: {
-      buildAiPrompt: buildExtractorPrompt,
+      buildAiPrompt: (councilOutput, ctx, force) => buildExtractorPrompt(councilOutput, ctx, force, ticketData.type),
       outputMarkers: CHEATSHEET_MARKERS,
       forceOnLastRound: true,
     },

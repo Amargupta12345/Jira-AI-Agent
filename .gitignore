@@ -4,6 +4,18 @@ v1-agent-legacy/
 # OS files
 .DS_Store
 
+# Local Jira exports for review prep (may contain ticket titles)
+review-data/
+
+# Sentry CLI secrets
+sentry-alert/sentry-config.json
+
+# Azure CLI session data
+Dr.-Nexus/.azure-cli/
+
+# Sentry poller runtime state
+Dr.-Nexus/.sentry-state/
+
 # jira-creator secrets
 jira-creator/jira-config.json
 jira-creator/.auth-state.json

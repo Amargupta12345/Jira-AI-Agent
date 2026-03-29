@@ -8,12 +8,15 @@
  *   single <KEY>                Process one specific ticket
  *   dry-run                     Poll once, log what would happen, don't execute
  *   resume <KEY> --from-step=N  Resume a failed run from a specific step
+ *   create-pr <KEY>             Create/retry PR only from checkpoint data
+ *   sentry-jira <ISSUE-ID>      Create Jira ticket for one chosen Sentry issue
  */
 
 import { loadConfig } from './utils/config.js';
 import { getTicketDetails, parseTicket, displayTicketDetails, searchTickets } from './jira/index.js';
-import { runPipeline, resume as resumePipeline } from './pipeline/index.js';
+import { runPipeline, resume as resumePipeline, createPrFromCheckpoint } from './pipeline/index.js';
 import { getProviderLabel } from './ai-provider/index.js';
+import { runSentryDaemon, pollOnce as pollSentryOnce, createJiraForIssue } from './sentry/index.js';
 import { log, ok, warn, err } from './utils/logger.js';
 import * as logger from './utils/logger.js';
 
@@ -105,6 +108,32 @@ async function runResume(config, ticketKey, fromStep) {
   }
 }
 
+async function runCreatePr(config, ticketKey) {
+  log(`Creating PR only for ${ticketKey} from checkpoint...`);
+  try {
+    const result = await createPrFromCheckpoint(config, ticketKey);
+    if (!result.success) {
+      process.exit(1);
+    }
+  } catch (error) {
+    err(`Failed to create PR for ${ticketKey}: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+async function runSentryJira(config, issueId) {
+  log(`[sentry] Creating Jira ticket for issue ${issueId}...`);
+  try {
+    const result = await createJiraForIssue(config, issueId);
+    if (!result.success) {
+      process.exit(1);
+    }
+  } catch (error) {
+    err(`Failed to create Jira ticket for issue ${issueId}: ${error.message}`);
+    process.exit(1);
+  }
+}
+
 function printUsage() {
   console.log(`
 == Dr. Asthana v2 ==
@@ -117,6 +146,10 @@ Commands:
   single <KEY>                Process one specific ticket (e.g., single JCP-123)
   dry-run                     Poll once, show ticket details, don't execute
   resume <KEY> --from-step=N  Resume a failed run from a specific step
+  create-pr <KEY>             Create/retry PR only from checkpoint data
+  sentry-daemon               Run Sentry alert polling daemon (list issues only)
+  sentry-poll                 Poll Sentry once and list issues
+  sentry-jira <ISSUE-ID>      Create Jira ticket for one chosen Sentry issue
 
 Configuration:
   Edit config.json in the project root.
@@ -162,6 +195,37 @@ async function main() {
       const fromStepArg = args.find(a => a.startsWith('--from-step='));
       const fromStep = fromStepArg ? parseInt(fromStepArg.split('=')[1], 10) : 5;
       await runResume(config, ticketKey, fromStep);
+      break;
+    }
+
+    case 'create-pr': {
+      const ticketKey = args[1];
+      if (!ticketKey) {
+        err('Missing ticket key. Usage: create-pr <TICKET-KEY>');
+        process.exit(1);
+      }
+      await runCreatePr(config, ticketKey);
+      break;
+    }
+
+    case 'sentry-daemon':
+      await runSentryDaemon(config);
+      break;
+
+    case 'sentry-poll': {
+      log('[sentry] Running one-shot poll...');
+      const listed = await pollSentryOnce(config);
+      ok(`[sentry] Done. ${listed} issue(s) listed.`);
+      break;
+    }
+
+    case 'sentry-jira': {
+      const issueId = args[1];
+      if (!issueId) {
+        err('Missing Sentry issue ID. Usage: sentry-jira <ISSUE-ID>');
+        process.exit(1);
+      }
+      await runSentryJira(config, issueId);
       break;
     }
 

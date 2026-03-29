@@ -6,13 +6,67 @@ A single reference for everything: how to automate daily work, all commands, and
 
 ## The Big Picture
 
-You have two AI tools working together:
+Four tools working together in a pipeline:
 
 | Tool | What it does | Where it lives |
 |------|-------------|----------------|
-| **NEXUS** | Reads a Jira ticket → writes code → creates ADO PR → updates Jira + Slack — fully automatic | `~/Documents/AI-Agent/Dr.-Asthana/` |
-| **jira-creator** | Creates/manages Jira tickets, transitions, comments via CLI | `~/Documents/AI-Agent/jira-creator/` |
+| **Sentry CLI + MCP** | Monitor production errors, get stack traces, resolve issues | `~/Documents/AI-Agent/sentry-alert/` |
+| **jira-creator** | Create/manage Jira tickets, transitions, comments via CLI | `~/Documents/AI-Agent/jira-creator/` |
+| **NEXUS** | Reads a Jira ticket → writes code → creates ADO PR → updates Jira + Slack — fully automatic | `~/Documents/AI-Agent/Dr.-Nexus/` |
 | **Claude Code** (`claude`) | Interactive AI coding in your terminal (you drive, Claude helps) | your terminal |
+
+```
+Sentry Error → Jira Ticket (label: nexus) → NEXUS → ADO PR → Merge
+```
+
+---
+
+## Scenario 0 — Sentry Error → Fully Automated Fix
+
+**Use this when:** A production error fires in Sentry and you want it fixed without any manual steps.
+
+```bash
+# Terminal 1: Sentry daemon (polls Sentry, auto-creates Jira tickets)
+cd ~/Documents/AI-Agent/Dr.-Nexus
+node src/index.js sentry-daemon
+
+# Terminal 2: NEXUS daemon (picks up Jira tickets, auto-creates ADO PRs)
+cd ~/Documents/AI-Agent/Dr.-Nexus
+node src/index.js daemon
+```
+
+Both daemons poll every 5 minutes. You get a Slack DM when the PR is ready.
+
+---
+
+## Scenario 0b — Sentry Error → Manual Ticket → Auto Fix
+
+**Use this when:** You want to inspect the error before NEXUS runs.
+
+```bash
+# 1. Inspect the error
+cd ~/Documents/AI-Agent/sentry-alert
+node sentry-cli.mjs issues blitzkrieg
+node sentry-cli.mjs event <issue-id>      # full stack trace
+
+# 2. Create a Jira ticket
+cd ~/Documents/AI-Agent/jira-creator
+node jira-cli.mjs create --project JCP --type Bug \
+  --summary "[Sentry] Error description" \
+  --description "Sentry: https://sentry.tools.jiocommerce.io/issues/<id>/\n\n(paste stack trace)" \
+  --jcp \
+  --field 'fixVersions=[{"name":"Fynd Platform v1.10.7"}]' \
+  --field 'customfield_10056=[{"value":"Blitzkrieg"}]'
+
+# 3. Trigger NEXUS
+node jira-cli.mjs label add JCP-XXXX nexus
+cd ~/Documents/AI-Agent/Dr.-Nexus
+node src/index.js single JCP-XXXX
+
+# 4. After PR merges — resolve in Sentry
+cd ~/Documents/AI-Agent/sentry-alert
+node sentry-cli.mjs resolve <issue-id>
+```
 
 ---
 
@@ -39,7 +93,7 @@ That's it. NEXUS will pick it up within 5 minutes (polls every 5 min).
 
 ```bash
 # Tail the live log to watch progress
-tail -f ~/Documents/AI-Agent/Dr.-Asthana/logs/$(date +%Y-%m-%d)/*.log
+tail -f ~/Documents/AI-Agent/Dr.-Nexus/logs/$(date +%Y-%m-%d)/*.log
 ```
 
 ### Step 4 — Check the PR
@@ -54,7 +108,7 @@ Open the PR, review the diff, approve or leave feedback.
 Use this when you want to run one ticket right now without waiting for the daemon.
 
 ```bash
-cd ~/Documents/AI-Agent/Dr.-Asthana
+cd ~/Documents/AI-Agent/Dr.-Nexus
 pnpm run single -- JCP-XXXXX
 ```
 
@@ -101,7 +155,7 @@ AZURE_DEVOPS_EXT_PAT=$(_ado_token) az repos pr create \
 ### NEXUS
 
 ```bash
-cd ~/Documents/AI-Agent/Dr.-Asthana
+cd ~/Documents/AI-Agent/Dr.-Nexus
 
 # Run as daemon (continuous, polls every 5 min)
 pnpm start
@@ -116,7 +170,7 @@ pnpm run dry-run
 pnpm run resume -- JCP-XXXXX --from-step=5
 
 # Watch live logs
-tail -f ~/Documents/AI-Agent/Dr.-Asthana/logs/$(date +%Y-%m-%d)/*.log
+tail -f ~/Documents/AI-Agent/Dr.-Nexus/logs/$(date +%Y-%m-%d)/*.log
 
 # Clean up after a run (remove cloned repos + pipeline state)
 ./clean.sh             # cleans ALL tickets
@@ -146,6 +200,32 @@ pnpm run resume -- JCP-XXXXX --from-step=5
 
 # Everything failed → start fresh
 ./clean.sh JCP-XXXXX && pnpm run single -- JCP-XXXXX
+```
+
+---
+
+### Sentry CLI
+
+```bash
+cd ~/Documents/AI-Agent/sentry-alert
+
+# Verify auth
+node sentry-cli.mjs whoami
+
+# List errors per service
+node sentry-cli.mjs issues blitzkrieg
+node sentry-cli.mjs issues blitzkrieg --query "is:unresolved level:fatal" --environment production
+
+# Search
+node sentry-cli.mjs search blitzkrieg --query "TypeError: Cannot read"
+
+# Stack trace
+node sentry-cli.mjs event <issue-id>
+
+# Resolve / ignore
+node sentry-cli.mjs resolve <issue-id>
+node sentry-cli.mjs ignore <issue-id>
+node sentry-cli.mjs comment <issue-id> "Fixing in JCP-XXXX"
 ```
 
 ---
@@ -267,13 +347,13 @@ If you hit the limit mid-run → wait for reset → `pnpm run resume -- JCP-XXXX
 
 ```
 Terminal 1 — run the agent
-  cd ~/Documents/AI-Agent/Dr.-Asthana && pnpm run single -- JCP-XXXXX
+  cd ~/Documents/AI-Agent/Dr.-Nexus && pnpm run single -- JCP-XXXXX
 
 Terminal 2 — watch the log
-  tail -f ~/Documents/AI-Agent/Dr.-Asthana/logs/$(date +%Y-%m-%d)/*.log
+  tail -f ~/Documents/AI-Agent/Dr.-Nexus/logs/$(date +%Y-%m-%d)/*.log
 
 Terminal 3 — watch the cheatsheet being built (Step 4)
-  watch -n 2 cat ~/Documents/AI-Agent/Dr.-Asthana/.pipeline-state/JCP-XXXXX/council/status.md
+  watch -n 2 cat ~/Documents/AI-Agent/Dr.-Nexus/.pipeline-state/JCP-XXXXX/council/status.md
 ```
 
 ---
@@ -285,7 +365,7 @@ If the council is planning something wrong, you can steer it without restarting:
 ```bash
 # Drop this file while Step 4 is running — agent reads it in next round
 echo "Focus on app/models/published_pages.model.js. The deletePage method needs findOneAndDelete not remove()." \
-  > ~/Documents/AI-Agent/Dr.-Asthana/.pipeline-state/JCP-XXXXX/council/human-feedback.md
+  > ~/Documents/AI-Agent/Dr.-Nexus/.pipeline-state/JCP-XXXXX/council/human-feedback.md
 ```
 
 ---

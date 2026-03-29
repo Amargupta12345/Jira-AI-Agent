@@ -1,0 +1,27 @@
+{
+  "headline": "AI-native ways of working",
+  "lede": "Impact comes from judgment: when to use AI, how to verify output, and what to automate. This portfolio is generated from live Jira data.",
+  "pillars": [
+    {
+      "title": "Automation & agents",
+      "body": "Describe your Dr.-Nexus / Codex / agent workflows here.",
+      "accent": "from-violet-500/20 to-fuchsia-500/10"
+    },
+    {
+      "title": "Review & verification",
+      "body": "How you validate AI output before merge.",
+      "accent": "from-cyan-500/20 to-blue-500/10"
+    },
+    {
+      "title": "Data-backed storytelling",
+      "body": "Why Jira-backed charts matter for your review.",
+      "accent": "from-amber-500/20 to-orange-500/10"
+    },
+    {
+      "title": "Continuous learning",
+      "body": "What you learned when AI did not work.",
+      "accent": "from-emerald-500/20 to-teal-500/10"
+    }
+  ],
+  "pinnedTickets": ["JCP-663", "JCP-9218"]
+}

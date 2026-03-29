@@ -10,9 +10,23 @@
  */
 export function buildTicketContext(ticketData) {
   const lines = [];
+  const isBug = ticketData.type && ticketData.type.toLowerCase() === 'bug';
 
   lines.push(`# JIRA Ticket: ${ticketData.key}`);
   lines.push('');
+
+  // Surface ticket type prominently so all AI agents know the expected behaviour
+  lines.push(`## Ticket Type`);
+  if (isBug) {
+    lines.push(`**BUG** — ${ticketData.priority || 'Normal'} priority`);
+    lines.push('');
+    lines.push('> This is a bug report. The fix must be minimal and targeted to the root cause.');
+    lines.push('> Do NOT refactor unrelated code. Scope is strictly limited to what the stack trace and error imply.');
+  } else {
+    lines.push(`**${ticketData.type || 'Task'}** — ${ticketData.priority || 'Normal'} priority`);
+  }
+  lines.push('');
+
   lines.push(`## Summary`);
   lines.push(ticketData.summary);
   lines.push('');
@@ -42,6 +56,16 @@ export function buildTicketContext(ticketData) {
     lines.push(`## Target Branch`);
     lines.push(ticketData.targetBranch);
     lines.push('');
+  }
+
+  if (ticketData.labels && ticketData.labels.length > 0) {
+    const sentryLabel = ticketData.labels.find(l => l.toLowerCase().includes('sentry'));
+    if (sentryLabel) {
+      lines.push(`## Origin`);
+      lines.push('This ticket was auto-created from a **Sentry production error**. ' +
+        'The stack trace in the description is the primary source of truth for identifying the root cause.');
+      lines.push('');
+    }
   }
 
   return lines.join('\n');

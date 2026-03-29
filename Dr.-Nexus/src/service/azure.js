@@ -2,18 +2,122 @@
  * Azure DevOps PR creation via az CLI
  */
 
-import { execSync } from 'child_process';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import { execFileSync, execSync } from 'child_process';
 import { log, warn, err } from '../utils/logger.js';
 import { summariseText } from '../utils/summariser.js';
 
 const AZ_TIMEOUT = 5 * 60 * 1000;
 const AZ_PR_DESC_LIMIT = 4000;
+const AUTH_ERROR_PATTERNS = [
+  'requires user authentication',
+  'please run: az login',
+  'before you can run Azure DevOps commands',
+  'the requested resource requires user authentication',
+  'TF400813',
+  'Unauthorized',
+  '401',
+];
 
-function escapeArg(arg) {
-  if (/[\s"'\\$`!]/.test(arg)) {
-    return `"${arg.replace(/["\\$`!]/g, '\\$&')}"`;
+function getAzurePat(config) {
+  const envVarName = config.azureDevOps?.patEnvVar;
+  const patFromNamedEnv = envVarName ? process.env[envVarName] : null;
+  return patFromNamedEnv || config.azureDevOps?.pat || process.env.AZURE_DEVOPS_EXT_PAT || resolveAzurePatFromCommand(config);
+}
+
+function resolveAzurePatFromCommand(config) {
+  const tokenCommand = config.azureDevOps?.tokenCommand;
+  if (!tokenCommand) return null;
+
+  const shellParts = [];
+  if (config.azureDevOps?.sourceZshrc) {
+    shellParts.push('source ~/.zshrc >/dev/null 2>&1');
   }
-  return arg;
+  shellParts.push(tokenCommand);
+
+  try {
+    const token = execFileSync('/bin/zsh', ['-lc', shellParts.join('\n')], {
+      stdio: 'pipe',
+      timeout: 30000,
+      encoding: 'utf-8',
+      env: process.env,
+    }).trim();
+
+    return token || null;
+  } catch (error) {
+    const stderr = error.stderr?.toString()?.trim();
+    const stdout = error.stdout?.toString()?.trim();
+    const detail = stderr || stdout || error.message;
+    warn(`Failed to resolve Azure DevOps token via shell command: ${detail}`);
+    return null;
+  }
+}
+
+function buildAzEnv(config, tmpDir) {
+  const env = { ...process.env };
+  const pat = getAzurePat(config);
+
+  if (pat) {
+    env.AZURE_DEVOPS_EXT_PAT = pat;
+    const azConfigDir = path.join(tmpDir || process.cwd(), '.azure-cli');
+    fs.mkdirSync(azConfigDir, { recursive: true });
+    env.AZURE_CONFIG_DIR = azConfigDir;
+
+    // Keep the globally installed azure-devops extension visible even when
+    // the CLI config directory is redirected into the temp workspace.
+    if (!env.AZURE_EXTENSION_DIR) {
+      const extensionDir = path.join(os.homedir(), '.azure', 'cliextensions');
+      if (fs.existsSync(extensionDir)) {
+        env.AZURE_EXTENSION_DIR = extensionDir;
+      }
+    }
+  }
+
+  return env;
+}
+
+function buildCommonAzArgs(config) {
+  const args = [];
+  if (config.azureDevOps.org) {
+    args.push('--organization', config.azureDevOps.org);
+  }
+  if (config.azureDevOps.project) {
+    args.push('--project', config.azureDevOps.project);
+  }
+  return args;
+}
+
+function runAz(config, tmpDir, args) {
+  return execFileSync('az', args, {
+    cwd: tmpDir,
+    stdio: 'pipe',
+    timeout: AZ_TIMEOUT,
+    encoding: 'utf-8',
+    env: buildAzEnv(config, tmpDir),
+  });
+}
+
+function isAzureAuthError(output) {
+  return AUTH_ERROR_PATTERNS.some(pattern => output.toLowerCase().includes(pattern.toLowerCase()));
+}
+
+function getAuthHelp(config) {
+  const envVarName = config.azureDevOps?.patEnvVar;
+  if (config.azureDevOps?.pat) {
+    return 'Configured Azure DevOps PAT was rejected. Verify azureDevOps.pat has repo PR permissions.';
+  }
+  if (envVarName) {
+    return `Azure DevOps PAT env var "${envVarName}" was not available or was rejected. Export a valid PAT with repo PR permissions, or run "az devops login".`;
+  }
+  if (config.azureDevOps?.tokenCommand) {
+    return `Azure DevOps token command failed or returned an invalid token. Verify azureDevOps.tokenCommand="${config.azureDevOps.tokenCommand}" and that sourcing ~/.zshrc exposes _ado_token in non-interactive zsh.`;
+  }
+  if (process.env.AZURE_DEVOPS_EXT_PAT) {
+    return 'AZURE_DEVOPS_EXT_PAT was rejected. Verify it contains a valid Azure DevOps PAT with repo PR permissions.';
+  }
+  return 'Azure DevOps PR creation needs API auth. Run "az devops login", set AZURE_DEVOPS_EXT_PAT, or configure azureDevOps.tokenCommand.';
 }
 
 /**
@@ -165,6 +269,7 @@ function buildPRDescription(config, ticketKey, ticketSummary, cheatsheet, tmpDir
  * @param {string[]} [options.critical]
  */
 export async function createPR(config, tmpDir, sourceBranch, targetBranch, ticketKey, ticketSummary, cheatsheet, options = {}) {
+  const { repoName: repoNameOverride } = options;
   const prefix = `[${ticketKey}] `;
   const maxSummaryChars = Math.max(20, 200 - prefix.length);
   const summarisedTitle = summariseText(ticketSummary || '', {
@@ -174,15 +279,24 @@ export async function createPR(config, tmpDir, sourceBranch, targetBranch, ticke
   const title = `${prefix}${summarisedTitle.substring(0, maxSummaryChars)}`;
   const description = buildPRDescription(config, ticketKey, ticketSummary, cheatsheet, tmpDir, options);
 
-  let repoName = '';
-  try {
-    const remoteUrl = execSync('git remote get-url origin', {
-      cwd: tmpDir, encoding: 'utf-8', stdio: 'pipe',
-    }).trim();
-    repoName = remoteUrl.split('/').pop().replace('.git', '');
-    log(`Detected repo name: ${repoName}`);
-  } catch (e) {
-    warn(`Could not detect repo name: ${e.message}`);
+  let repoName = repoNameOverride || '';
+  if (repoNameOverride) {
+    log(`Using configured repo name: ${repoName}`);
+  } else if (tmpDir) {
+    try {
+      const remoteUrl = execSync('git remote get-url origin', {
+        cwd: tmpDir, encoding: 'utf-8', stdio: 'pipe',
+      }).trim();
+      repoName = remoteUrl.split('/').pop().replace('.git', '');
+      log(`Detected repo name: ${repoName}`);
+    } catch (e) {
+      warn(`Could not detect repo name: ${e.message}`);
+    }
+  }
+
+  if (!repoName) {
+    err('Failed to create PR: repository name is required');
+    return null;
   }
 
   const args = [
@@ -194,24 +308,13 @@ export async function createPR(config, tmpDir, sourceBranch, targetBranch, ticke
     '--description', description,
     '--draft', 'false',
     '--output', 'json',
+    ...buildCommonAzArgs(config),
   ];
-
-  if (config.azureDevOps.org) {
-    args.push('--organization', config.azureDevOps.org);
-  }
-  if (config.azureDevOps.project) {
-    args.push('--project', config.azureDevOps.project);
-  }
 
   log(`Creating PR: ${sourceBranch} -> ${targetBranch}`);
 
   try {
-    const result = execSync(`az ${args.map(escapeArg).join(' ')}`, {
-      cwd: tmpDir,
-      stdio: 'pipe',
-      timeout: AZ_TIMEOUT,
-      encoding: 'utf-8',
-    });
+    const result = runAz(config, tmpDir, args);
 
     const prData = JSON.parse(result);
     const prId = prData.pullRequestId;
@@ -228,7 +331,13 @@ export async function createPR(config, tmpDir, sourceBranch, targetBranch, ticke
 
     if (output.includes('TF401179') || output.includes('already has an active pull request')) {
       log(`PR already exists for branch ${sourceBranch}, looking up existing PR...`);
-      return findExistingPR(config, repoName, sourceBranch);
+      return findExistingPR(config, tmpDir, repoName, sourceBranch);
+    }
+
+    if (isAzureAuthError(output)) {
+      err(`Failed to create PR: ${getAuthHelp(config)}`);
+      err(`Azure CLI output: ${output}`);
+      return null;
     }
 
     err(`Failed to create PR: ${output}`);
@@ -236,7 +345,7 @@ export async function createPR(config, tmpDir, sourceBranch, targetBranch, ticke
   }
 }
 
-function findExistingPR(config, repoName, sourceBranch) {
+function findExistingPR(config, tmpDir, repoName, sourceBranch) {
   try {
     const args = [
       'repos', 'pr', 'list',
@@ -244,20 +353,10 @@ function findExistingPR(config, repoName, sourceBranch) {
       '--source-branch', sourceBranch,
       '--status', 'active',
       '--output', 'json',
+      ...buildCommonAzArgs(config),
     ];
 
-    if (config.azureDevOps.org) {
-      args.push('--organization', config.azureDevOps.org);
-    }
-    if (config.azureDevOps.project) {
-      args.push('--project', config.azureDevOps.project);
-    }
-
-    const result = execSync(`az ${args.map(escapeArg).join(' ')}`, {
-      stdio: 'pipe',
-      timeout: AZ_TIMEOUT,
-      encoding: 'utf-8',
-    });
+    const result = runAz(config, tmpDir, args);
 
     const prs = JSON.parse(result);
     if (prs.length > 0) {

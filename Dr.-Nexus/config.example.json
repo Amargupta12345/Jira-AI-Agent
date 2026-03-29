@@ -14,7 +14,9 @@
   "azureDevOps": {
     "org": "https://dev.azure.com/YOUR_ORG",
     "project": "YOUR_PROJECT",
-    "repoBaseUrl": "git@ssh.dev.azure.com:v3/YOUR_ORG/YOUR_PROJECT"
+    "repoBaseUrl": "git@ssh.dev.azure.com:v3/YOUR_ORG/YOUR_PROJECT",
+    "pat": "YOUR_AZURE_DEVOPS_PAT",
+    "patEnvVar": "AZURE_DEVOPS_PAT"
   },
   "services": {
     "my-service": {
@@ -111,5 +113,22 @@
   },
   "tests": {
     "enabled": false
+  },
+  "sentry": {
+    "authToken": "YOUR_SENTRY_AUTH_TOKEN",
+    "baseUrl": "https://sentry.example.com",
+    "orgSlug": "your-org",
+    "pollInterval": 300,
+    "stateDir": ".sentry-state",
+    "services": {
+      "my-service": {
+        "projectSlug": "my-service",
+        "jiraProject": "JCP",
+        "environments": ["production"],
+        "minLevel": "error",
+        "issueStatus": "unresolved",
+        "limit": 25
+      }
+    }
   }
 }

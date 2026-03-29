@@ -1,0 +1,6 @@
+{
+  "authToken": "YOUR_SENTRY_AUTH_TOKEN",
+  "baseUrl": "https://sentry.example.com",
+  "orgSlug": "your-org",
+  "defaultProject": "your-default-project"
+}
