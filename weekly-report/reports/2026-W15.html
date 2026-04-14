@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Report — 2026-W15 — Amar Gupta</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1117;
+    --bg2: #161b27;
+    --card: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --green: #22c55e; --green-bg: rgba(34,197,94,0.12);
+    --blue: #60a5fa;  --blue-bg: rgba(96,165,250,0.12);
+    --violet:#a78bfa; --violet-bg:rgba(167,139,250,0.12);
+    --orange:#fb923c; --orange-bg:rgba(251,146,60,0.12);
+    --red:   #f87171; --red-bg:   rgba(248,113,113,0.12);
+    --yellow:#fbbf24; --yellow-bg:rgba(251,191,36,0.12);
+    --cyan:  #22d3ee; --cyan-bg:  rgba(34,211,238,0.12);
+    --slate: #94a3b8; --slate-bg: rgba(148,163,184,0.12);
+    --gray:  #64748b; --gray-bg:  rgba(100,116,139,0.12);
+  }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:14px; line-height:1.6; }
+  a { color:var(--blue); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* Layout */
+  .wrapper { max-width:1100px; margin:0 auto; padding:2rem 1.5rem; }
+  .section { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem; }
+
+  /* Header */
+  .header { margin-bottom:2rem; }
+  .header__week { font-size:0.85rem; color:var(--text3); font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.3rem; }
+  .header__title { font-size:1.8rem; font-weight:700; color:var(--text); margin-bottom:0.2rem; }
+  .header__range { font-size:0.9rem; color:var(--text2); }
+  .header__meta  { font-size:0.8rem; color:var(--text3); margin-top:0.3rem; }
+
+  /* Summary cards */
+  .cards-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.25rem 1.5rem; position:relative; }
+  .card--green  { border-left:3px solid var(--green); }
+  .card--blue   { border-left:3px solid var(--blue); }
+  .card--orange { border-left:3px solid var(--orange); }
+  .card--violet { border-left:3px solid var(--violet); }
+  .card__icon { font-size:1.4rem; margin-bottom:0.5rem; }
+  .card__value { font-size:2rem; font-weight:700; color:var(--text); line-height:1; }
+  .card__label { font-size:0.8rem; color:var(--text2); margin-top:0.25rem; font-weight:500; }
+  .card__sub   { font-size:0.75rem; color:var(--text3); margin-top:0.2rem; }
+  .card__delta { margin-top:0.5rem; }
+
+  /* Section titles */
+  .section-title { font-size:1.05rem; font-weight:700; color:var(--text); margin-bottom:1rem; }
+  .sub-title { font-size:0.9rem; font-weight:600; color:var(--text2); margin-bottom:0.75rem; }
+
+  /* Delta badges */
+  .delta { font-size:0.75rem; font-weight:600; padding:2px 6px; border-radius:4px; }
+  .delta--up      { color:#86efac; background:rgba(34,197,94,0.15); }
+  .delta--down    { color:#fca5a5; background:rgba(248,113,113,0.15); }
+  .delta--neutral { color:var(--text3); background:var(--slate-bg); }
+
+  /* Type/priority badges */
+  .badge { display:inline-block; font-size:0.7rem; font-weight:600; padding:2px 7px; border-radius:4px; letter-spacing:0.02em; }
+  .badge--red    { color:var(--red);    background:var(--red-bg); }
+  .badge--violet { color:var(--violet); background:var(--violet-bg); }
+  .badge--blue   { color:var(--blue);   background:var(--blue-bg); }
+  .badge--orange { color:var(--orange); background:var(--orange-bg); }
+  .badge--yellow { color:var(--yellow); background:var(--yellow-bg); }
+  .badge--green  { color:var(--green);  background:var(--green-bg); }
+  .badge--cyan   { color:var(--cyan);   background:var(--cyan-bg); }
+  .badge--slate  { color:var(--slate);  background:var(--slate-bg); }
+  .badge--gray   { color:var(--gray);   background:var(--gray-bg); }
+
+  /* Tables */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  th { font-size:0.72rem; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; padding:8px 10px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
+  td { padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+  .ticket-link { color:var(--blue); font-weight:500; }
+  .summary-cell { max-width:380px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .repo-cell   { white-space:nowrap; font-size:0.8rem; color:var(--text2); }
+  .sp-cell     { text-align:right; color:var(--text2); font-size:0.85rem; }
+  .num-cell    { text-align:right; color:var(--text2); width:50px; }
+  .date-cell   { white-space:nowrap; color:var(--text3); font-size:0.8rem; }
+
+  /* Mini bar */
+  .bar-mini { height:6px; background:rgba(96,165,250,0.5); border-radius:3px; }
+
+  /* AI section */
+  .ai-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem; }
+  .ai-stat-card { background:rgba(167,139,250,0.05); border:1px solid rgba(167,139,250,0.15); border-radius:10px; padding:1rem; text-align:center; }
+  .ai-stat-value { font-size:2rem; font-weight:700; color:var(--violet); }
+  .ai-stat-label { font-size:0.78rem; color:var(--text2); margin-top:0.3rem; }
+
+  .tool-breakdown { display:flex; flex-direction:column; gap:0.6rem; max-width:500px; }
+  .tool-row { display:flex; align-items:center; gap:0.75rem; }
+  .tool-name { width:70px; font-size:0.82rem; font-weight:600; color:var(--text2); }
+  .tool-bar-wrap { flex:1; background:rgba(255,255,255,0.06); border-radius:4px; height:8px; overflow:hidden; }
+  .tool-bar { height:8px; border-radius:4px; transition:width 0.3s; }
+  .tool-count { width:30px; text-align:right; font-size:0.82rem; color:var(--text2); }
+
+  /* Sparkline */
+  .spark-wrap { overflow-x:auto; padding:0.5rem 0; }
+  .sparkline { display:block; }
+  .spark-labels { display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text3); margin-top:4px; }
+
+  /* Empty state */
+  .empty { color:var(--text3); font-size:0.875rem; padding:0.5rem 0; }
+
+  /* Footer */
+  .footer { text-align:center; color:var(--text3); font-size:0.75rem; margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); }
+
+  /* Print */
+  @media print {
+    body { background:#fff; color:#000; }
+    .section { border:1px solid #e2e8f0; background:#fff; break-inside:avoid; }
+    a { color:#2563eb; }
+    .card { border-left:3px solid #94a3b8 !important; background:#f8fafc; }
+    .card__value { color:#1e293b; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header class="header">
+    <div class="header__week">2026-W15</div>
+    <div class="header__title">Weekly Productivity Report</div>
+    <div class="header__range">Apr 6, 2026 – Apr 12, 2026</div>
+    <div class="header__meta">Amar Gupta · Generated Apr 14, 2026, 06:12 PM</div>
+  </header>
+
+  
+<div class="cards-row">
+  
+  <div class="card card--green">
+    <div class="card__icon">✅</div>
+    <div class="card__value">1</div>
+    <div class="card__label">Tickets Resolved</div>
+    
+    
+  </div>
+  <div class="card card--blue">
+    <div class="card__icon">🔀</div>
+    <div class="card__value">3</div>
+    <div class="card__label">PRs Merged</div>
+    <div class="card__sub">+6 open</div>
+    
+  </div>
+  <div class="card card--orange">
+    <div class="card__icon">📝</div>
+    <div class="card__value">29</div>
+    <div class="card__label">Commits</div>
+    
+    
+  </div>
+  <div class="card card--violet">
+    <div class="card__icon">🤖</div>
+    <div class="card__value">67%</div>
+    <div class="card__label">AI Assist Rate</div>
+    <div class="card__sub">6 of 9 PRs</div>
+    
+  </div>
+</div>
+
+  
+<section class="section">
+  <h2 class="section-title">🎯 Jira Work</h2>
+
+  <h3 class="sub-title">Resolved this week (1)</h3>
+  <div class="table-wrap"><table>
+        <thead><tr><th>Key</th><th>Summary</th><th>Type</th><th>Priority</th><th>SP</th></tr></thead>
+        <tbody>
+    <tr>
+      <td><a href="https://gofynd.atlassian.net/browse/JCP-10547" target="_blank" class="ticket-link">JCP-10547</a></td>
+      <td class="summary-cell">Concurrent editing: second user's changes reverted and user redirected</td>
+      <td><span class="badge badge--red">Bug</span></td>
+      <td><span class="badge badge--yellow">High</span></td>
+      <td class="sp-cell">—</td>
+    </tr></tbody>
+      </table></div>
+
+  <h3 class="sub-title" style="margin-top:1.5rem">In Progress (2)</h3>
+  <div class="table-wrap"><table>
+        <thead><tr><th>Key</th><th>Summary</th><th>Type</th><th>Status</th><th>SP</th></tr></thead>
+        <tbody>
+    <tr>
+      <td><a href="https://gofynd.atlassian.net/browse/JCP-10669" target="_blank" class="ticket-link">JCP-10669</a></td>
+      <td class="summary-cell">10.6 |10.7 | Feature Store shows as enabled in Appearance tab even when Store Settings doesn’t enable it</td>
+      <td><span class="badge badge--red">Bug</span></td>
+      <td><span class="badge badge--blue">QA FAILED</span></td>
+      <td class="sp-cell">—</td>
+    </tr>
+    <tr>
+      <td><a href="https://gofynd.atlassian.net/browse/JCP-11330" target="_blank" class="ticket-link">JCP-11330</a></td>
+      <td class="summary-cell">LT5 Feature Store: Multi dropdown visible on page listing UI when no feature stores are configured</td>
+      <td><span class="badge badge--red">Bug</span></td>
+      <td><span class="badge badge--slate">To Do</span></td>
+      <td class="sp-cell">—</td>
+    </tr></tbody>
+      </table></div>
+</section>
+
+  
+<section class="section">
+  <h2 class="section-title">🔀 Pull Requests</h2>
+  <div class="table-wrap"><table>
+        <thead><tr><th>Repo</th><th>PR</th><th>Status</th><th>AI</th><th>Created</th></tr></thead>
+        <tbody>
+    <tr>
+      <td class="repo-cell">blitzkrieg</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/blitzkrieg/pullrequest/254338" target="_blank" class="ticket-link">#254338 [JCP-11549] Blitzkrieg: Restrict LRU in-memory cache to application (storefront) server only</a></td>
+      <td><span class="badge badge--blue">Open</span></td>
+      <td><span class="badge badge--violet">Claude</span></td>
+      <td class="date-cell">2026-04-12</td>
+    </tr>
+    <tr>
+      <td class="repo-cell">blitzkrieg</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/blitzkrieg/pullrequest/254333" target="_blank" class="ticket-link">#254333 [JCP-10744] Setup: NEXUS agent auto-detects Sentry errors, creates Jira tickets and raises ADO PRs for all configured services</a></td>
+      <td><span class="badge badge--blue">Open</span></td>
+      <td><span class="badge badge--violet">Claude</span></td>
+      <td class="date-cell">2026-04-12</td>
+    </tr>
+    <tr>
+      <td class="repo-cell">blitzkrieg</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/blitzkrieg/pullrequest/254331" target="_blank" class="ticket-link">#254331 [JCP-10744] Setup: NEXUS agent auto-detects Sentry errors, creates Jira tickets and raises ADO PRs for all configured services</a></td>
+      <td><span class="badge badge--blue">Open</span></td>
+      <td><span class="badge badge--violet">Claude</span></td>
+      <td class="date-cell">2026-04-12</td>
+    </tr>
+    <tr>
+      <td class="repo-cell">blitzkrieg</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/blitzkrieg/pullrequest/254317" target="_blank" class="ticket-link">#254317 [JCP-10744] Setup: NEXUS agent auto-detects Sentry errors, creates Jira tickets and raises ADO PRs for all configured services</a></td>
+      <td><span class="badge badge--blue">Open</span></td>
+      <td><span class="badge badge--violet">Claude</span></td>
+      <td class="date-cell">2026-04-12</td>
+    </tr>
+    <tr>
+      <td class="repo-cell">blitzkrieg</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/blitzkrieg/pullrequest/251827" target="_blank" class="ticket-link">#251827 ID:JCP-11133; Sections audit trail payload (scoped) — version/1.10.7</a></td>
+      <td><span class="badge badge--green">Merged</span></td>
+      <td></td>
+      <td class="date-cell">2026-04-07</td>
+    </tr>
+    <tr>
+      <td class="repo-cell">scattershot</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/scattershot/pullrequest/253808" target="_blank" class="ticket-link">#253808 ID:JCP-11517; merge: Merge version/1.10.3-RC531H into version/1.10.7-RC81H (S...</a></td>
+      <td><span class="badge badge--green">Merged</span></td>
+      <td></td>
+      <td class="date-cell">2026-04-10</td>
+    </tr>
+    <tr>
+      <td class="repo-cell">mirage</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/mirage/pullrequest/253513" target="_blank" class="ticket-link">#253513 JCP-5659: component name issue</a></td>
+      <td><span class="badge badge--green">Merged</span></td>
+      <td><span class="badge badge--cyan">Cursor</span></td>
+      <td class="date-cell">2026-04-09</td>
+    </tr>
+    <tr>
+      <td class="repo-cell">mirage</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/mirage/pullrequest/252089" target="_blank" class="ticket-link">#252089 JCP-5659: Featured store - view page from different SIS</a></td>
+      <td><span class="badge badge--blue">Open</span></td>
+      <td></td>
+      <td class="date-cell">2026-04-07</td>
+    </tr>
+    <tr>
+      <td class="repo-cell">jetfire</td>
+      <td class="summary-cell"><a href="https://dev.azure.com/GoFynd/FyndPlatformCore/_git/jetfire/pullrequest/254061" target="_blank" class="ticket-link">#254061 ID:JCP-11147; fix: data loader SSR Host routing and client prefetch fallback</a></td>
+      <td><span class="badge badge--blue">Open</span></td>
+      <td><span class="badge badge--cyan">Cursor</span></td>
+      <td class="date-cell">2026-04-10</td>
+    </tr></tbody>
+      </table></div>
+
+  
+  <h3 class="sub-title" style="margin-top:1.5rem">Commits by Repo</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Repo</th><th>#</th><th></th></tr></thead>
+    <tbody>
+    <tr>
+      <td>blitzkrieg</td>
+      <td class="num-cell">11</td>
+      <td><div class="bar-mini" style="width:132px"></div></td>
+    </tr>
+    <tr>
+      <td>mirage</td>
+      <td class="num-cell">9</td>
+      <td><div class="bar-mini" style="width:108px"></div></td>
+    </tr>
+    <tr>
+      <td>scattershot</td>
+      <td class="num-cell">6</td>
+      <td><div class="bar-mini" style="width:72px"></div></td>
+    </tr>
+    <tr>
+      <td>jetfire</td>
+      <td class="num-cell">3</td>
+      <td><div class="bar-mini" style="width:36px"></div></td>
+    </tr></tbody>
+  </table></div>
+</section>
+
+  
+<section class="section">
+  <h2 class="section-title">🤖 AI-Native Metrics</h2>
+  <div class="ai-grid">
+    <div class="ai-stat-card">
+      <div class="ai-stat-value">6</div>
+      <div class="ai-stat-label">AI-Assisted PRs</div>
+    </div>
+    <div class="ai-stat-card">
+      <div class="ai-stat-value">67%</div>
+      <div class="ai-stat-label">AI Assist Rate</div>
+    </div>
+    <div class="ai-stat-card">
+      <div class="ai-stat-value">0</div>
+      <div class="ai-stat-label">Cursor Commits</div>
+    </div>
+    <div class="ai-stat-card">
+      <div class="ai-stat-value">2</div>
+      <div class="ai-stat-label">Tools Used</div>
+    </div>
+  </div>
+
+  
+  <h3 class="sub-title" style="margin-top:1.5rem">Tool Breakdown</h3>
+  <div class="tool-breakdown">
+      <div class="tool-row">
+        <div class="tool-name">Claude</div>
+        <div class="tool-bar-wrap">
+          <div class="tool-bar" style="width:67%; background:#8b5cf6"></div>
+        </div>
+        <div class="tool-count">4</div>
+      </div>
+      <div class="tool-row">
+        <div class="tool-name">Cursor</div>
+        <div class="tool-bar-wrap">
+          <div class="tool-bar" style="width:33%; background:#06b6d4"></div>
+        </div>
+        <div class="tool-count">2</div>
+      </div></div>
+
+  
+  <h3 class="sub-title" style="margin-top:1.5rem">Commit Activity</h3>
+  <div class="spark-wrap">
+    <svg width="70" height="40" class="sparkline"><rect x="0" y="36" width="8" height="4" rx="2" fill="#3b82f6" opacity="0.8">
+      <title>2026-04-02: 1 commit</title></rect><rect x="10" y="36" width="8" height="4" rx="2" fill="#3b82f6" opacity="0.8">
+      <title>2026-04-03: 1 commit</title></rect><rect x="20" y="22" width="8" height="18" rx="2" fill="#3b82f6" opacity="0.8">
+      <title>2026-04-07: 4 commits</title></rect><rect x="30" y="18" width="8" height="22" rx="2" fill="#3b82f6" opacity="0.8">
+      <title>2026-04-08: 5 commits</title></rect><rect x="40" y="31" width="8" height="9" rx="2" fill="#3b82f6" opacity="0.8">
+      <title>2026-04-09: 2 commits</title></rect><rect x="50" y="0" width="8" height="40" rx="2" fill="#3b82f6" opacity="0.8">
+      <title>2026-04-10: 9 commits</title></rect><rect x="60" y="9" width="8" height="31" rx="2" fill="#3b82f6" opacity="0.8">
+      <title>2026-04-12: 7 commits</title></rect></svg>
+    <div class="spark-labels">
+      <span>2026-04-02</span>
+      <span>2026-04-12</span>
+    </div>
+  </div>
+</section>
+
+  <footer class="footer">
+    AI-Agent Weekly Report · 2026-W15 · Apr 14, 2026, 06:12 PM
+  </footer>
+
+</div>
+</body>
+</html>

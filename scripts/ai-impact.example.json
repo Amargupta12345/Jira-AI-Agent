@@ -1,0 +1,23 @@
+{
+  "headline": "AI impact (speed + quality)",
+  "lede": "Measured improvements after adopting AI-assisted workflows with verification (tests, reviews, and staged rollout). Replace these sample numbers with your real baseline and current values.",
+  "summaryCards": [
+    { "label": "Avg time to resolve P1/P0", "value": "45→25 min", "sub": "(-44%)" },
+    { "label": "Story delivery cycle", "value": "2.0→1.3 days", "sub": "(-35%)" },
+    { "label": "PR review rework", "value": "3.2→1.4 rounds", "sub": "(-56%)" },
+    { "label": "Regression rate", "value": "8%→3%", "sub": "(-62%)" }
+  ],
+  "beforeAfter": [
+    { "metric": "Debugging / RCA time (typical)", "before": 120, "after": 70, "unit": "min", "direction": "lower_is_better" },
+    { "metric": "Feature implementation time (medium)", "before": 16, "after": 11, "unit": "hours", "direction": "lower_is_better" },
+    { "metric": "Bugs reopened after QA", "before": 10, "after": 4, "unit": "per month", "direction": "lower_is_better" },
+    { "metric": "Test coverage added", "before": 0, "after": 18, "unit": "tests/month", "direction": "higher_is_better" }
+  ],
+  "notes": [
+    "Workflow: AI for exploration + drafting → human review → tests → staged rollout → post-deploy checks.",
+    "Quality guardrails: reproducible steps, rollback plan, and component-level checklists for CMS modules."
+  ],
+  "timeRange": "Jan 2025 → Mar 2026",
+  "dataSource": "Manual tracking + PR/Jira notes (replace with your source)"
+}
+

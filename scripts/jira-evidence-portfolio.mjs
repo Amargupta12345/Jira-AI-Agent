@@ -24,30 +24,30 @@ const CONFIG_PATH = resolve(ROOT, 'jira-creator/jira-config.json');
 const AI_NATIVE_SECTION = {
   headline: 'AI-native ways of working',
   lede:
-    'Impact comes from judgment: when to use AI, how to verify output, and what to automate. This portfolio itself is generated from live Jira data — evidence, not vibes.',
+    'Impact comes from judgment: when to use AI, how to verify output, and what to automate. I use AI to accelerate investigation and drafting, but every change is validated with tests, review, and safe rollout. This portfolio is generated from live Jira data — evidence, not vibes.',
   pillars: [
     {
-      title: 'Automation & agents',
+      title: 'Investigation → plan → execute (repeatable)',
       body:
-        'Used AI-assisted development workflows (e.g. Dr.-Nexus / agent pipelines) to turn tickets into reviewed changes faster, with human gates before merge.',
+        'Use AI to summarize context (tickets/PRs/logs), propose 2–3 options, and produce a small, testable plan. Prefer incremental diffs to reduce risk in CMS + platform code.',
       accent: 'from-violet-500/20 to-fuchsia-500/10',
     },
     {
       title: 'Review & verification',
       body:
-        'Treated model output as draft: tests, PR review, and production validation stay non-negotiable — especially for Blocker and Epic-class work.',
+        'Treat AI output as a draft. Validate using unit/integration tests, reproducible steps, peer review, and post-deploy checks—especially for Blocker and production issues.',
       accent: 'from-cyan-500/20 to-blue-500/10',
     },
     {
-      title: 'Data-backed storytelling',
+      title: 'Speed without losing quality',
       body:
-        'Charts and exports come from the same Jira source of truth as delivery, so performance conversations anchor to shipped work and severity mix.',
+        'AI helps me move faster on debugging, refactors, and test creation. Quality stays high via guardrails: smaller PRs, clear rollback paths, and follow-up hardening after hotfixes.',
       accent: 'from-amber-500/20 to-orange-500/10',
     },
     {
-      title: 'Continuous learning',
+      title: 'Know when NOT to use AI',
       body:
-        'When an AI shortcut failed, switched to a simpler path — and logged the lesson. Native competency means knowing when not to delegate judgment.',
+        'Avoid AI for sensitive data, uncertain requirements, or high-risk changes without clear reproduction. If context is missing, I first collect evidence (logs, traces, steps) before drafting fixes.',
       accent: 'from-emerald-500/20 to-teal-500/10',
     },
   ],
@@ -60,6 +60,50 @@ function loadEvidenceCustom() {
     return JSON.parse(readFileSync(p, 'utf8'));
   } catch (e) {
     console.warn(`evidence-custom.json: ${e.message} — using defaults`);
+    return null;
+  }
+}
+
+function loadAiImpact() {
+  const p = resolve(OUT_DIR, 'ai-impact.json');
+  if (!existsSync(p)) return null;
+  try {
+    const raw = JSON.parse(readFileSync(p, 'utf8'));
+    if (!raw || typeof raw !== 'object') return null;
+    return raw;
+  } catch (e) {
+    console.warn(`ai-impact.json: ${e.message} — skipping AI impact section`);
+    return null;
+  }
+}
+
+function loadAiMetricsEvidence() {
+  const p = resolve(OUT_DIR, 'ai-metrics.json');
+  if (!existsSync(p)) return null;
+  try {
+    const raw = JSON.parse(readFileSync(p, 'utf8'));
+    if (!raw || typeof raw !== 'object') return null;
+    const s = raw.summary || {};
+    if (typeof s.cursorCommits !== 'number' && typeof s.mergedAiPrs !== 'number') return null;
+    return { mode: 'single', raw };
+  } catch (e) {
+    console.warn(`ai-metrics.json: ${e.message} — skipping AI metrics evidence`);
+    return null;
+  }
+}
+
+function loadAiMetricsAllEvidence() {
+  const p = resolve(OUT_DIR, 'ai-metrics-all.json');
+  if (!existsSync(p)) return null;
+  try {
+    const raw = JSON.parse(readFileSync(p, 'utf8'));
+    if (!raw || typeof raw !== 'object') return null;
+    const s = raw.summary || {};
+    if (typeof s.cursorCommits !== 'number' && typeof s.mergedAiPrs !== 'number') return null;
+    if (!Array.isArray(raw.repos)) return null;
+    return { mode: 'all', raw };
+  } catch (e) {
+    console.warn(`ai-metrics-all.json: ${e.message} — skipping combined AI metrics evidence`);
     return null;
   }
 }
@@ -241,6 +285,14 @@ function main() {
   const custom = loadEvidenceCustom();
   const aiSection = mergeAiSection(AI_NATIVE_SECTION, custom);
   uniqueHighlights = applyPinnedOrder(uniqueHighlights, custom?.pinnedTickets);
+  const aiImpact = loadAiImpact();
+  // Prefer combined evidence when it exists (all services), fall back to single-repo evidence.
+  const aiMetrics = loadAiMetricsAllEvidence() || loadAiMetricsEvidence();
+
+  const aiMetricsRaw = aiMetrics?.raw || null;
+  const aiMetricsSummary = aiMetricsRaw?.summary || {};
+  const aiMetricsMeta = aiMetricsRaw?.meta || {};
+  const aiMetricsRepos = aiMetrics?.mode === 'all' ? aiMetricsRaw?.repos || [] : [];
 
   const aiCardsHtml = aiSection.pillars
     .map(
@@ -251,6 +303,88 @@ function main() {
     </article>`,
     )
     .join('');
+
+  const aiImpactCardsHtml = Array.isArray(aiImpact?.summaryCards)
+    ? aiImpact.summaryCards
+        .slice(0, 6)
+        .map(
+          (c) => `
+      <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-4 backdrop-blur">
+        <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">${escapeHtml(c.label ?? '')}</p>
+        <p class="stat-num text-xl font-bold text-white">${escapeHtml(c.value ?? '')}</p>
+        ${c.sub ? `<p class="text-xs text-slate-400 mt-1">${escapeHtml(c.sub)}</p>` : ''}
+      </div>`,
+        )
+        .join('')
+    : '';
+
+  const aiImpactRowsHtml = Array.isArray(aiImpact?.beforeAfter)
+    ? aiImpact.beforeAfter
+        .slice(0, 10)
+        .map((r) => {
+          const before = r.before ?? '';
+          const after = r.after ?? '';
+          const unit = r.unit ? ` ${r.unit}` : '';
+          const dir = r.direction === 'higher_is_better' ? '↑ higher is better' : '↓ lower is better';
+          return `
+        <tr class="border-b border-white/5 hover:bg-white/5">
+          <td class="py-2.5 pr-2 text-slate-300">${escapeHtml(r.metric ?? '')}</td>
+          <td class="py-2.5 pr-2 text-slate-400">${escapeHtml(`${before}${unit}`)}</td>
+          <td class="py-2.5 pr-2 text-slate-400">${escapeHtml(`${after}${unit}`)}</td>
+          <td class="py-2.5 text-slate-500 text-xs">${escapeHtml(dir)}</td>
+        </tr>`;
+        })
+        .join('')
+    : '';
+
+  const aiImpactNotesHtml = Array.isArray(aiImpact?.notes)
+    ? aiImpact.notes
+        .slice(0, 6)
+        .map((n) => `<li class="text-sm text-slate-400 leading-relaxed">${escapeHtml(n)}</li>`)
+        .join('')
+    : '';
+
+  const aiMetricsToolRows = aiMetricsRaw?.breakdown?.byTool
+    ? Object.entries(aiMetricsRaw.breakdown.byTool)
+        .slice(0, 6)
+        .map(
+          ([tool, n]) => `
+          <div class="flex items-center justify-between gap-3 border-b border-white/5 py-2 last:border-0">
+            <span class="text-sm text-slate-300">${escapeHtml(tool)}</span>
+            <span class="font-mono text-xs text-slate-400">${escapeHtml(String(n))} PRs</span>
+          </div>`,
+        )
+        .join('')
+    : '';
+
+  function topToolLabel(repoEntry) {
+    const byTool = repoEntry?.breakdown?.byTool;
+    if (!byTool || typeof byTool !== 'object') return '—';
+    const top = Object.entries(byTool).sort((a, b) => (b[1] || 0) - (a[1] || 0))[0];
+    if (!top) return '—';
+    return `${top[0]} (${top[1]})`;
+  }
+
+  const aiMetricsReposRowsHtml =
+    aiMetrics?.mode === 'all'
+      ? aiMetricsRepos
+          .slice(0, 12)
+          .map((r) => {
+            const repo = r?.meta?.repo || r?.meta?.serviceKey || '—';
+            const svc = r?.meta?.serviceKey || '—';
+            const cursor = r?.summary?.cursorCommits ?? 0;
+            const prs = r?.summary?.mergedAiPrs ?? 0;
+            return `
+        <tr class="border-b border-white/5 hover:bg-white/5">
+          <td class="py-2.5 pr-2 text-slate-300">${escapeHtml(String(svc))}</td>
+          <td class="py-2.5 pr-2 text-slate-500 text-xs font-mono">${escapeHtml(String(repo))}</td>
+          <td class="py-2.5 pr-2 font-mono text-slate-300">${escapeHtml(String(cursor))}</td>
+          <td class="py-2.5 pr-2 font-mono text-slate-300">${escapeHtml(String(prs))}</td>
+          <td class="py-2.5 text-slate-500 text-xs">${escapeHtml(topToolLabel(r))}</td>
+        </tr>`;
+          })
+          .join('')
+      : '';
 
   const highlightCardsHtml = uniqueHighlights
     .map(
@@ -326,12 +460,62 @@ function main() {
     #full-wrap { max-height: 420px; overflow: auto; }
     #full-wrap thead th { position: sticky; top: 0; background: rgb(15 23 42 / 0.95); backdrop-filter: blur(8px); z-index: 1; }
     .ticket-clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+    .print-toast { opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease; }
+    .print-toast.show { opacity: 1; transform: translateY(0); }
+    @page { margin: 14mm 12mm; }
     @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       .no-print { display: none !important; }
       .print-break { break-inside: avoid; }
-      main { padding-top: 0.5rem !important; }
+      main { padding-top: 0 !important; padding-bottom: 0 !important; max-width: none !important; }
+      section { margin-bottom: 18px !important; }
       #full-wrap { max-height: none !important; overflow: visible !important; }
       .reveal { opacity: 1 !important; transform: none !important; }
+      html, body { background: #ffffff !important; color: #0f172a !important; }
+      .mesh, .grid-bg { background: #ffffff !important; background-image: none !important; }
+      a { color: #0284c7 !important; text-decoration: none !important; }
+      a[href]::after { content: ""; }
+
+      /* Typography */
+      body { font-size: 12px !important; line-height: 1.45 !important; }
+      h1 { color: #0f172a !important; font-size: 22px !important; line-height: 1.15 !important; }
+      h2 { color: #0f172a !important; font-size: 15px !important; margin-bottom: 8px !important; }
+      h3 { color: #0f172a !important; font-size: 13px !important; margin-bottom: 6px !important; }
+      p { color: rgba(15, 23, 42, 0.82) !important; }
+      .text-slate-400, .text-slate-500 { color: rgba(15, 23, 42, 0.72) !important; }
+      .text-white { color: #0f172a !important; }
+      /* Gradient/clip text can become invisible in print */
+      .text-transparent { color: #0f172a !important; -webkit-text-fill-color: #0f172a !important; }
+      .bg-clip-text { -webkit-background-clip: border-box !important; background-clip: border-box !important; }
+      .stat-num { color: #0f172a !important; }
+
+      /* Cards become clean print cards */
+      .backdrop-blur { backdrop-filter: none !important; }
+      .shadow-sm { box-shadow: none !important; }
+      .rounded-2xl, .rounded-xl { border-radius: 12px !important; }
+      .border-white\\/10 { border-color: rgba(15, 23, 42, 0.12) !important; }
+      .bg-slate-900\\/60, .bg-slate-900\\/50, .bg-slate-900\\/40, .bg-slate-900\\/30, .bg-slate-900\\/80, .bg-slate-800\\/70 { background: #ffffff !important; }
+
+      /* Charts: give them room and avoid cramped doughnuts */
+      canvas { max-height: 260px !important; }
+      .print-chart-img { display: block !important; width: 100% !important; max-height: 280px !important; object-fit: contain !important; }
+
+      /* Table: readable in print */
+      #full { border-collapse: collapse !important; }
+      #full thead th { position: static !important; background: #f8fafc !important; color: rgba(15,23,42,0.7) !important; border-bottom: 1px solid rgba(15,23,42,0.12) !important; }
+      #full tbody td { color: rgba(15,23,42,0.82) !important; border-bottom: 1px solid rgba(15,23,42,0.08) !important; }
+      #full tbody tr { break-inside: avoid !important; }
+
+      .ticket-card { background: #ffffff !important; border-color: rgba(15,23,42,0.12) !important; }
+      .ticket-card p, .ticket-card span, .ticket-card div { color: #0f172a !important; }
+      .pill { background: rgba(15,23,42,0.08) !important; color: rgba(15,23,42,0.72) !important; }
+
+      /* Highlights: ensure text is not cut off */
+      .ticket-clamp { display: block !important; -webkit-line-clamp: unset !important; overflow: visible !important; }
+
+      /* Mermaid / diagrams */
+      svg { max-width: 100% !important; height: auto !important; }
+      pre.mermaid { color: rgba(15,23,42,0.72) !important; }
     }
   </style>
 </head>
@@ -340,10 +524,21 @@ function main() {
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <span class="font-semibold text-white tracking-tight">Evidence portfolio</span>
       <div class="flex flex-wrap items-center gap-2">
-      <button type="button" id="btn-print" class="no-print text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 transition-colors">Save as PDF</button>
+      <button type="button" id="btn-print"
+        class="no-print inline-flex items-center gap-2 text-xs px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500/20 to-violet-500/20 hover:from-cyan-500/30 hover:to-violet-500/30 text-white border border-white/10 shadow-sm shadow-cyan-500/10 transition-all active:scale-[0.98]">
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 text-cyan-200">
+          <path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.42l2.3 2.3V4a1 1 0 0 1 1-1Zm-7 14a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1Z"/>
+        </svg>
+        Download PDF
+      </button>
+      <span class="no-print print-toast text-[11px] text-slate-400 border border-white/10 bg-slate-950/60 px-2.5 py-1.5 rounded-xl backdrop-blur" id="print-toast">
+        Preparing print view…
+      </span>
       <nav class="flex flex-wrap gap-1 text-sm">
         <a href="#overview" class="nav-pill px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">Overview</a>
         <a href="#ai-native" class="nav-pill px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">AI-native</a>
+        ${aiMetrics ? `<a href="#ai-evidence" class="nav-pill px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">AI evidence</a>` : ''}
+        ${aiImpact ? `<a href="#ai-impact" class="nav-pill px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">AI impact</a>` : ''}
         <a href="#analytics" class="nav-pill px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">Analytics</a>
         <a href="#evidence" class="nav-pill px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">Highlights</a>
         <a href="#all" class="nav-pill px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">All tickets</a>
@@ -394,11 +589,150 @@ function main() {
     <section id="ai-native" class="reveal mb-16">
       <h2 class="text-xl font-semibold text-white mb-1 flex items-center gap-2">
         <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500/30 to-fuchsia-500/20 text-lg">✦</span>
-        ${escapeHtml(AI_NATIVE_SECTION.headline)}
+        ${escapeHtml(aiSection.headline)}
       </h2>
-      <p class="text-slate-400 mb-8 max-w-3xl leading-relaxed">${escapeHtml(AI_NATIVE_SECTION.lede)}</p>
+      <p class="text-slate-400 mb-8 max-w-3xl leading-relaxed">${escapeHtml(aiSection.lede)}</p>
       <div class="grid sm:grid-cols-2 gap-4">${aiCardsHtml}</div>
     </section>
+
+    ${
+      aiMetrics
+        ? `<section id="ai-evidence" class="reveal mb-16">
+      <h2 class="text-xl font-semibold text-white mb-1 flex items-center gap-2">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/30 to-blue-500/20 text-lg">✓</span>
+        AI evidence (from VCS)
+      </h2>
+      <p class="text-slate-400 mb-6 max-w-3xl leading-relaxed">
+        Proof that I consistently use AI-assisted workflows in real delivery — measured from version control activity, not self-reported.
+      </p>
+
+      <div class="rounded-2xl border border-white/10 bg-slate-900/30 p-5 print-break">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p class="text-sm font-medium text-slate-300 mb-1">Summary</p>
+            <p class="text-xs text-slate-500 font-mono">${escapeHtml(
+              [
+                aiMetrics.mode === 'all'
+                  ? `repos: ${(aiMetricsMeta.repos || []).length || aiMetricsRepos.length}`
+                  : aiMetricsMeta?.repo
+                    ? `repo: ${aiMetricsMeta.repo}`
+                    : '',
+                aiMetricsMeta?.fromDate ? `from: ${String(aiMetricsMeta.fromDate).slice(0, 10)}` : '',
+                aiMetricsMeta?.toDate ? `to: ${String(aiMetricsMeta.toDate).slice(0, 10)}` : '',
+              ]
+                .filter(Boolean)
+                .join(' · '),
+            )}</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <div class="rounded-xl border border-white/10 bg-slate-900/50 px-3 py-2">
+              <p class="text-[11px] text-slate-500 uppercase tracking-wide">Cursor commits</p>
+              <p class="font-mono text-sm text-white">${escapeHtml(String(aiMetricsSummary?.cursorCommits ?? 0))}</p>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-slate-900/50 px-3 py-2">
+              <p class="text-[11px] text-slate-500 uppercase tracking-wide">Merged AI PRs</p>
+              <p class="font-mono text-sm text-white">${escapeHtml(String(aiMetricsSummary?.mergedAiPrs ?? 0))}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 grid sm:grid-cols-2 gap-4">
+          <div class="rounded-xl border border-white/10 bg-slate-900/40 p-4">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-2">By AI tool</p>
+            ${aiMetricsToolRows || '<p class="text-sm text-slate-500">—</p>'}
+          </div>
+          <div class="rounded-xl border border-white/10 bg-slate-900/40 p-4">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-2">Verification habits</p>
+            <ul class="list-disc pl-5 space-y-1.5 text-sm text-slate-400">
+              <li>Use AI for drafts and exploration, not final authority</li>
+              <li>Validate with tests, code review, and staged rollout</li>
+              <li>Convert hotfix learnings into permanent fixes</li>
+            </ul>
+          </div>
+        </div>
+
+        ${
+          aiMetrics?.mode === 'all' && aiMetricsReposRowsHtml
+            ? `<div class="mt-4 rounded-xl border border-white/10 bg-slate-900/40 overflow-hidden">
+          <div class="px-4 py-3 border-b border-white/5 flex flex-wrap items-center justify-between gap-2">
+            <p class="text-xs text-slate-500 uppercase tracking-wide">Per service breakdown (top 12)</p>
+            <p class="text-[11px] text-slate-500 font-mono">Cursor commits + merged AI PRs</p>
+          </div>
+          <div class="px-4 pb-3 overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-xs text-slate-500 uppercase tracking-wide">
+                  <th class="py-2 pr-2">Service</th>
+                  <th class="py-2 pr-2">Repo</th>
+                  <th class="py-2 pr-2">Cursor commits</th>
+                  <th class="py-2 pr-2">Merged AI PRs</th>
+                  <th class="py-2">Top tool</th>
+                </tr>
+              </thead>
+              <tbody>${aiMetricsReposRowsHtml}</tbody>
+            </table>
+          </div>
+        </div>`
+            : ''
+        }
+      </div>
+    </section>`
+        : ''
+    }
+
+    ${
+      aiImpact
+        ? `<section id="ai-impact" class="reveal mb-16">
+      <h2 class="text-xl font-semibold text-white mb-1 flex items-center gap-2">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/30 to-blue-500/20 text-lg">↗</span>
+        ${escapeHtml(aiImpact.headline ?? 'AI impact (speed + quality)')}
+      </h2>
+      <p class="text-slate-400 mb-6 max-w-3xl leading-relaxed">${escapeHtml(
+        aiImpact.lede ??
+          'Before/after metrics that show faster delivery and higher quality with AI-assisted workflows (with verification).',
+      )}</p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        ${aiImpactCardsHtml || ''}
+      </div>
+
+      ${
+        aiImpactRowsHtml
+          ? `<div class="rounded-2xl border border-white/10 bg-slate-900/40 overflow-hidden mb-4">
+        <div class="px-5 py-4 border-b border-white/5 flex flex-wrap items-center justify-between gap-2">
+          <p class="text-sm text-slate-300 font-medium">Before vs after</p>
+          <p class="text-xs text-slate-500 font-mono">${escapeHtml(
+            [aiImpact.timeRange, aiImpact.dataSource].filter(Boolean).join(' · '),
+          )}</p>
+        </div>
+        <div class="px-5 pb-4 overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs text-slate-500 uppercase tracking-wide">
+                <th class="py-2 pr-2">Metric</th>
+                <th class="py-2 pr-2">Before</th>
+                <th class="py-2 pr-2">After</th>
+                <th class="py-2">Goal</th>
+              </tr>
+            </thead>
+            <tbody>${aiImpactRowsHtml}</tbody>
+          </table>
+        </div>
+      </div>`
+          : ''
+      }
+
+      ${
+        aiImpactNotesHtml
+          ? `<div class="rounded-2xl border border-white/10 bg-slate-900/30 p-5 print-break">
+        <p class="text-sm font-medium text-slate-300 mb-3">How I keep quality high</p>
+        <ul class="list-disc pl-5 space-y-2">${aiImpactNotesHtml}</ul>
+      </div>`
+          : ''
+      }
+    </section>`
+        : ''
+    }
 
     <section id="analytics" class="reveal mb-16">
       <h2 class="text-xl font-semibold text-white mb-6">Workload analytics</h2>
@@ -495,6 +829,51 @@ function main() {
 
     mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'loose', fontFamily: 'Inter' });
 
+    // Print helpers: ensure charts/diagrams render inside PDF.
+    let __printRestore = null;
+    function preparePrintAssets() {
+      const backups = [];
+
+      // Convert Chart.js canvases to images for reliable printing
+      document.querySelectorAll('canvas').forEach((cv) => {
+        try {
+          const dataUrl = cv.toDataURL('image/png', 1.0);
+          if (!dataUrl || dataUrl.length < 32) return;
+          const img = document.createElement('img');
+          img.src = dataUrl;
+          img.className = 'print-chart-img';
+          img.style.display = 'none';
+          cv.insertAdjacentElement('afterend', img);
+          backups.push(() => img.remove());
+        } catch {
+          // ignore
+        }
+      });
+
+      // Mermaid sometimes needs a nudge before print
+      try {
+        if (window.mermaid?.run) {
+          window.mermaid.run({ querySelector: '.mermaid' });
+        }
+      } catch {
+        // ignore
+      }
+
+      // In print media, show the generated images and hide canvases
+      backups.push(() => {});
+      __printRestore = () => backups.forEach((fn) => fn());
+    }
+
+    function cleanupPrintAssets() {
+      try {
+        __printRestore?.();
+      } finally {
+        __printRestore = null;
+      }
+      // Remove any leftover print images
+      document.querySelectorAll('img.print-chart-img').forEach((img) => img.remove());
+    }
+
     // Animated counters
     function animateValue(el, end, duration) {
       const start = 0;
@@ -553,7 +932,31 @@ function main() {
       });
     });
 
-    document.getElementById('btn-print')?.addEventListener('click', () => window.print());
+    const toast = document.getElementById('print-toast');
+    function showToast(on) {
+      if (!toast) return;
+      toast.classList.toggle('show', !!on);
+    }
+    document.getElementById('btn-print')?.addEventListener('click', () => {
+      showToast(true);
+      // Let layout settle (fonts/charts) before print dialog
+      setTimeout(() => window.print(), 160);
+    });
+    window.addEventListener('beforeprint', () => {
+      showToast(false);
+      document.documentElement.classList.add('is-printing');
+      preparePrintAssets();
+      // show images for print (CSS handles sizing)
+      document.querySelectorAll('canvas').forEach((c) => (c.style.display = 'none'));
+      document.querySelectorAll('img.print-chart-img').forEach((i) => (i.style.display = 'block'));
+    });
+    window.addEventListener('afterprint', () => {
+      showToast(false);
+      document.documentElement.classList.remove('is-printing');
+      // restore canvases
+      document.querySelectorAll('canvas').forEach((c) => (c.style.display = ''));
+      cleanupPrintAssets();
+    });
   </script>
 </body>
 </html>`;

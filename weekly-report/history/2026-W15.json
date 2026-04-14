@@ -1,0 +1,30 @@
+{
+  "label": "2026-W15",
+  "weekFrom": "2026-04-06",
+  "weekTo": "2026-04-12",
+  "generatedAt": "2026-04-14T12:42:57.711Z",
+  "jira": {
+    "summary": {
+      "total": 3,
+      "resolved": 1,
+      "inProgress": 2,
+      "storyPointsResolved": 0,
+      "storyPointsTotal": 0
+    }
+  },
+  "azure": {
+    "summary": {
+      "totalPRs": 9,
+      "mergedPRs": 3,
+      "activePRs": 6,
+      "totalCommits": 29,
+      "cursorCommits": 0,
+      "aiPRs": 6,
+      "aiAssistRate": 67
+    },
+    "byTool": {
+      "Claude": 4,
+      "Cursor": 2
+    }
+  }
+}
