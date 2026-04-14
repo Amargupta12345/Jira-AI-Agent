@@ -19,3 +19,4 @@ dump.rdb
 
 # pnpm
 pnpm-debug.log*
+.azure-cli/

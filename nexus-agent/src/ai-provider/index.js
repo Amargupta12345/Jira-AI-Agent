@@ -8,6 +8,7 @@
  * Supports multiple modes: execute, debate, evaluate.
  */
 
+import { spawnSync } from 'child_process';
 import { spawn, buildResult } from './provider.js';
 import * as claudeAdapter from './adapters/claude.js';
 import * as codexAdapter from './adapters/codex.js';
@@ -171,4 +172,19 @@ export function getProviderLabel(config) {
   const provider = execConfig.provider || 'claude';
   const model = execConfig[provider]?.model || 'default';
   return `${provider} (${model}) [${strategy}]`;
+}
+
+/**
+ * Check which AI CLIs are installed and responsive.
+ * Uses --version (fast, no auth required).
+ * @returns {{ claude: {ok, version?, error?}, codex: {ok, version?, error?} }}
+ */
+export function checkAvailability() {
+  const check = (cmd) => {
+    const r = spawnSync(cmd, ['--version'], { encoding: 'utf-8', timeout: 5000 });
+    if (r.error) return { ok: false, error: 'not installed' };
+    if (r.status !== 0) return { ok: false, error: r.stderr?.trim()?.slice(0, 60) || 'error' };
+    return { ok: true, version: (r.stdout?.trim() || '').split('\n')[0] };
+  };
+  return { claude: check('claude'), codex: check('codex') };
 }

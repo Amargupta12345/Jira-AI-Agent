@@ -15,7 +15,7 @@
 import { loadConfig } from './utils/config.js';
 import { getTicketDetails, parseTicket, displayTicketDetails, searchTickets } from './jira/index.js';
 import { runPipeline, resume as resumePipeline, createPrFromCheckpoint } from './pipeline/index.js';
-import { getProviderLabel } from './ai-provider/index.js';
+import { getProviderLabel, checkAvailability } from './ai-provider/index.js';
 import { runSentryDaemon, runSentryAgent, pollOnce as pollSentryOnce, createJiraForIssue, createJiraForIssues } from './sentry/index.js';
 import readline from 'readline';
 import { createMultiPR } from './service/multi-pr.js';
@@ -154,20 +154,44 @@ function rlPrompt(question) {
 
 // ── AI provider selector ───────────────────────────────────────────────────────
 
-async function selectAiProvider(config) {
-  const current = config.aiProvider?.execute?.provider || 'claude';
-  const answer = await rlPrompt(
-    `\nAI Provider:  [1] Claude  [2] Codex  (Enter = ${current})\n> `
-  );
+function printProviderStatus(config) {
+  const avail  = checkAvailability();
+  const active = config.aiProvider?.execute?.provider || 'claude';
 
-  const normalised = answer.trim().toLowerCase();
+  const claudeLine = avail.claude.ok
+    ? `\x1b[32m✓\x1b[0m Claude  ${(avail.claude.version || '').slice(0, 20)}`
+    : `\x1b[31m✗\x1b[0m Claude  (${avail.claude.error})`;
+  const codexLine  = avail.codex.ok
+    ? `\x1b[32m✓\x1b[0m Codex   ${(avail.codex.version || '').slice(0, 20)}`
+    : `\x1b[31m✗\x1b[0m Codex   (${avail.codex.error})`;
+
+  const activeLabel = active === 'codex' ? 'Codex' : 'Claude';
+  const activeOk    = avail[active]?.ok;
+  const activeBadge = activeOk ? '\x1b[32m✓\x1b[0m' : '\x1b[31m✗ not available\x1b[0m';
+
+  log(`AI  ${claudeLine}   ${codexLine}   active: ${activeLabel} ${activeBadge}`);
+}
+
+async function selectAiProvider(config, providerFlag) {
   let provider;
-  if (normalised === '2' || normalised === 'codex') {
-    provider = 'codex';
-  } else if (normalised === '1' || normalised === 'claude' || !normalised) {
-    provider = 'claude';
+
+  if (providerFlag) {
+    // --provider flag bypasses the interactive prompt
+    provider = (providerFlag === 'codex') ? 'codex' : 'claude';
   } else {
-    provider = current;
+    const current = config.aiProvider?.execute?.provider || 'claude';
+    const answer = await rlPrompt(
+      `\nAI Provider:  [1] Claude  [2] Codex  (Enter = ${current})\n> `
+    );
+
+    const normalised = answer.trim().toLowerCase();
+    if (normalised === '2' || normalised === 'codex') {
+      provider = 'codex';
+    } else if (normalised === '1' || normalised === 'claude' || !normalised) {
+      provider = 'claude';
+    } else {
+      provider = current;
+    }
   }
 
   const other = provider === 'claude' ? 'codex' : 'claude';
@@ -189,11 +213,48 @@ async function selectAiProvider(config) {
     }
   }
 
-  const label = provider === 'codex' ? 'Codex (gpt-5.4)' : `Claude (${config.aiProvider?.execute?.claude?.model || 'sonnet'})`;
-  ok(`Provider: ${label}`);
+  printProviderStatus(config);
   log('');
 
   return config;
+}
+
+function cmdStatus(config) {
+  const avail  = checkAvailability();
+  const active = config.aiProvider?.execute?.provider || 'claude';
+  const strategy = config.aiProvider?.strategy || 'single';
+  const model  = config.aiProvider?.execute?.[active]?.model || 'default';
+
+  log('');
+  log('┌─────────────────────────────────────────────────────────────────┐');
+  log('│  AI Provider Status                                             │');
+  log('└─────────────────────────────────────────────────────────────────┘');
+  log('');
+
+  for (const [name, res] of [['claude', avail.claude], ['codex', avail.codex]]) {
+    const badge   = res.ok ? '\x1b[32m✓  installed\x1b[0m' : '\x1b[31m✗  not found \x1b[0m';
+    const version = res.ok ? `  ${res.version || ''}` : `  (${res.error})`;
+    const isActive = name === active ? '  \x1b[36m← active\x1b[0m' : '';
+    log(`  ${name.padEnd(8)} ${badge}${version}${isActive}`);
+  }
+
+  log('');
+  log(`  Strategy:  ${strategy}`);
+  log(`  Model:     ${model}`);
+  log('');
+
+  const activeOk = avail[active]?.ok;
+  if (activeOk) {
+    ok('Active provider is ready.');
+  } else {
+    warn(`Active provider '${active}' is not installed.`);
+    const fallback = active === 'claude' ? 'codex' : 'claude';
+    if (avail[fallback]?.ok) log(`  Switch:  nexus single JCP-XXX --provider ${fallback}`);
+  }
+  log('');
+  log('  Switch:  nexus single JCP-XXX --provider codex');
+  log('           nexus daemon --provider claude');
+  log('');
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -341,6 +402,10 @@ Commands:
   sentry-poll                           Poll Sentry once and list all issues
   sentry-jira <ISSUE-ID>                Create Jira ticket for one specific Sentry issue ID
   sentry-daemon                         Run Sentry alert polling daemon (list issues only, no auto-action)
+  status                                Show AI provider status (installed, active, model)
+
+Options:
+  --provider claude|codex               Set AI provider without interactive prompt
 
 Configuration:
   Edit config.json in the project root.
@@ -348,17 +413,34 @@ Configuration:
 }
 
 async function main() {
-  const args = process.argv.slice(2);
-  const command = args[0];
+  const rawArgs = process.argv.slice(2);
+  const command = rawArgs[0];
 
   if (!command || command === '--help' || command === '-h') {
     printUsage();
     process.exit(0);
   }
 
+  // Extract --provider flag
+  let providerFlag = null;
+  const eqProvider = rawArgs.find(a => a.startsWith('--provider='));
+  if (eqProvider) providerFlag = eqProvider.split('=')[1];
+  else {
+    const idx = rawArgs.indexOf('--provider');
+    if (idx !== -1 && rawArgs[idx + 1] && !rawArgs[idx + 1].startsWith('--')) providerFlag = rawArgs[idx + 1];
+  }
+  const args = rawArgs.filter((a, i) => {
+    if (a.startsWith('--provider=')) return false;
+    if (a === '--provider') return false;
+    if (i > 0 && rawArgs[i - 1] === '--provider') return false;
+    return true;
+  });
+
   let config = loadConfig();
 
-  config = await selectAiProvider(config);
+  if (command === 'status') return cmdStatus(config);
+
+  config = await selectAiProvider(config, providerFlag);
 
   switch (command) {
     case 'daemon':
